@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/baseFragment">
+
+    <fragment
+        android:id="@+id/baseFragment"
+        android:name="com.example.digitalcalculator.main.BaseFragment"
+        android:label="Calculator"
+        tools:layout="@layout/fragment_base" >
+        <action
+            android:id="@+id/action_baseFragment_to_historyFragment2"
+            app:destination="@id/historyFragment2" />
+        <action
+            android:id="@+id/action_baseFragment_to_settings"
+            app:destination="@id/settings" />
+    </fragment>
+    <fragment
+        android:id="@+id/historyFragment2"
+        android:name="com.example.mobilecalculator.history.HistoryFragment"
+        android:label="History">
+        <action
+            android:id="@+id/action_historyFragment2_to_baseFragment"
+            app:destination="@id/baseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settings"
+        android:name="com.example.digitalcalculator.settings.Settings"
+        android:label="Settings" >
+        <action
+            android:id="@+id/action_settings_to_baseFragment"
+            app:destination="@id/baseFragment" />
+    </fragment>
+</navigation>
