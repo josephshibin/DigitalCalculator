@@ -30,4 +30,5 @@ class MyViewModel(application: Application) : AndroidViewModel(application){
     // history list
     val historyItems = mutableListOf<HistoryAdapterItem>()
 
+
 }

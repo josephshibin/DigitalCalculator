@@ -5,24 +5,31 @@ import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.digitalcalculator.R
 import com.example.digitalcalculator.databinding.FragmentBaseBinding
 import com.example.digitalcalculator.domain.HistoryAdapterItem
 import com.example.digitalcalculator.gestures.SwipeGestureListener
+import com.example.digitalcalculator.history.TempHistoryAdapter
 import com.example.digitalcalculator.viewmodel.MyViewModel
+import java.util.*
 
 class BaseFragment : Fragment() {
     private lateinit var binding: FragmentBaseBinding
     private lateinit var myViewModel: MyViewModel
     private var canAddOperation = false
     private var canAddDecimal = true
-    private var toggleStateOfInputVoice=false
+    private var toggleStateOfInputVoice = false
+    private val MAX_ITEMS = 3
+    private var lastThreeItems = mutableListOf<HistoryAdapterItem>()
+//    lateinit var recyclerView:RecyclerView
 
     // swipe gesture
     private lateinit var gestureDetector: GestureDetector
@@ -66,6 +73,19 @@ class BaseFragment : Fragment() {
         binding.mulBtn.setOnClickListener { operationAction(it) }
         binding.backBtn.setOnClickListener { backSpaceAction(it) }
         binding.clearBtn.setOnClickListener { allClearAction(it) }
+        binding.clearBtn.setOnLongClickListener {
+            binding.workingsTV.text=""
+            binding.resultsTV.text=""
+//            val tempAdapter=TempHistoryAdapter(lastThreeItems)
+//            tempAdapter.clearHistory()
+//            tempAdapter.notifyDataSetChanged()
+            lastThreeItems.clear()
+            Log.i("list",lastThreeItems.toString())
+            Toast.makeText(requireContext(),"Long press",Toast.LENGTH_SHORT).show()
+            //lastThreeItems.clear()
+            true
+
+        }
         binding.equalBtn.setOnClickListener { equalsAction(it) }
 
 
@@ -94,19 +114,26 @@ class BaseFragment : Fragment() {
         }
 
 
+        //text to speech
+        textToSpeech = TextToSpeech(requireContext(), TextToSpeech.OnInitListener { status ->
+            if (status != TextToSpeech.ERROR) {
+                textToSpeech.language = Locale.US
+            }
+        })
+
     }
 
 
     private fun onSwipeUpToVoiceInput() {
         // Handle swipe up gesture
-            if (toggleStateOfInputVoice) {
-                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-                intent.putExtra(
-                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-                )
-                startActivityForResult(intent, SPEECH_REQUEST_CODE)
-            }
+        if (toggleStateOfInputVoice) {
+            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            intent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
+            startActivityForResult(intent, SPEECH_REQUEST_CODE)
+        }
 
 
     }
@@ -133,17 +160,50 @@ class BaseFragment : Fragment() {
 
 
     fun numberAction(view: View) {
-        if (view is Button) {
-            if (view.text == ".") {
-                if (canAddDecimal)
+        if (binding.resultsTV.text.isEmpty()) {
+            if (view is Button) {
+                if (view.text == ".") {
+                    if (canAddDecimal)
+                        binding.workingsTV.append(view.text)
+
+                    canAddDecimal = false
+                } else
                     binding.workingsTV.append(view.text)
 
-                canAddDecimal = false
-            } else
-                binding.workingsTV.append(view.text)
+                canAddOperation = true
+            }
+        } else {
+            binding.resultsTV.text = ""
+            binding.workingsTV.text = ""
+            if (view is Button) {
+                if (view.text == ".") {
+                    if (canAddDecimal)
+                        binding.workingsTV.append(view.text)
 
-            canAddOperation = true
+                    canAddDecimal = false
+                } else
+                    binding.workingsTV.append(view.text)
+
+                canAddOperation = true
+            }
+            addCalculationToTempHistory()
         }
+    }
+
+    private fun addCalculationToTempHistory() {
+        myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+
+        // adding item to the temporary history list
+        lastThreeItems.add(myViewModel.historyItems.last())
+        if (lastThreeItems.size > MAX_ITEMS) {
+            lastThreeItems.removeAt(0)
+        }
+        val recyclerView = binding.recyclerView
+        recyclerView.isNestedScrollingEnabled = false
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        val adapter = TempHistoryAdapter(lastThreeItems)
+        recyclerView.adapter = adapter
+        recyclerView.adapter?.notifyItemInserted(lastThreeItems.size + 1)
     }
 
     fun operationAction(view: View) {
@@ -160,9 +220,11 @@ class BaseFragment : Fragment() {
     }
 
     fun backSpaceAction(view: View) {
-        val length = binding.workingsTV.length()
-        if (length > 0)
-            binding.workingsTV.text = binding.workingsTV.text.subSequence(0, length - 1)
+        if (binding.resultsTV.text.isEmpty()) {
+            val length = binding.workingsTV.length()
+            if (length > 0)
+                binding.workingsTV.text = binding.workingsTV.text.subSequence(0, length - 1)
+        }
     }
 
     fun equalsAction(view: View) {
@@ -170,6 +232,7 @@ class BaseFragment : Fragment() {
         val expression = binding.workingsTV.text.toString()
         val result = binding.resultsTV.text.toString()
         addToTheHistory(expression, result)
+        textToSpeech.speak(result, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     private fun calculateResults(): String {
@@ -260,11 +323,13 @@ class BaseFragment : Fragment() {
     }
 
     private fun addToTheHistory(expression: String, result: String) {
-        myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
-        myViewModel.historyItems.add(HistoryAdapterItem(expression, result))
+        if (expression.isNotEmpty() && result.isNotEmpty()) {
+            //passing the main history list to the adapter
+            val addingEqualSign=getString(R.string.result,result)
+            myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+            myViewModel.historyItems.add(HistoryAdapterItem(expression, addingEqualSign))
+        }
         // Log.i("list", myViewModel.historyItems.toString())
-
-
     }
 
 

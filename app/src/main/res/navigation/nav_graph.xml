@@ -23,7 +23,9 @@
         android:label="History">
         <action
             android:id="@+id/action_historyFragment2_to_baseFragment"
-            app:destination="@id/baseFragment" />
+            app:destination="@id/baseFragment"
+            app:popUpTo="@id/baseFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/settings"
@@ -31,6 +33,7 @@
         android:label="Settings" >
         <action
             android:id="@+id/action_settings_to_baseFragment"
-            app:destination="@id/baseFragment" />
+            app:destination="@id/baseFragment"
+            app:popUpTo="@id/baseFragment" />
     </fragment>
 </navigation>
