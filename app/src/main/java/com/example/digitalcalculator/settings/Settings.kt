@@ -1,5 +1,6 @@
 package com.example.digitalcalculator.settings
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -8,10 +9,14 @@ import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Switch
+import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.digitalcalculator.R
 import com.example.digitalcalculator.databinding.FragmentSettingsBinding
 import com.example.digitalcalculator.viewmodel.MyViewModel
 
@@ -22,6 +27,8 @@ class Settings : Fragment() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var vibrator: Vibrator
     private lateinit var binding: FragmentSettingsBinding
+    var toggele=false
+
 
 
     override fun onCreateView(
@@ -31,7 +38,71 @@ class Settings : Fragment() {
     ): View? {
          binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
+
+        // Load the saved dark mode preference
+        val sharedPreferences = requireActivity().getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
+        val isDarkModeEnabled = sharedPreferences.getBoolean("isDarkModeEnabled", false)
+
+       // binding.darkModeSwitch.isChecked = isDarkModeEnabled
+
+        // Saving the dark mode preference when the user toggles the switch
+//        binding.darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
+//            sharedPreferences.edit().putBoolean("isDarkModeEnabled", isChecked).apply()
+//            requireActivity().recreate()
+//        }
+        binding.theme.setOnClickListener {
+            showOptionsDialog()
+        }
+
         return binding.root
+    }
+    private fun showOptionsDialog(){
+        val builder = AlertDialog.Builder(requireContext())
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialogbox, null)
+        builder.setView(view)
+        val radioGroup = view.findViewById<RadioGroup>(R.id.radio_group)
+        val radioButton1 = view.findViewById<RadioButton>(R.id.system_default)
+        val radioButton2 = view.findViewById<RadioButton>(R.id.light)
+        val radioButton3 = view.findViewById<RadioButton>(R.id.dark)
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.system_default -> {
+                    //Toast.makeText(requireContext(),"hii",Toast.LENGTH_SHORT).show()
+                    toggele=true
+                }
+                R.id.light -> {
+                   // Toast.makeText(requireContext(),"hii",Toast.LENGTH_SHORT).show()
+                    toggele=false
+
+                }
+                R.id.dark -> {
+                   // Toast.makeText(requireContext(),"hii",Toast.LENGTH_SHORT).show()
+                    sharedPreferences.edit().putBoolean("isDarkModeEnabled", true).apply()
+
+
+
+
+
+
+                    toggele=false
+
+                }
+            }
+        }
+        builder.setPositiveButton("OK") { dialog, _ ->
+            if(toggele) {
+                dialog.dismiss()
+            }else {
+                dialog.dismiss()
+
+//                requireActivity().recreate()
+            }
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

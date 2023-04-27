@@ -1,13 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.DigitalCalculator" parent="Theme.AppCompat">
+    <style name="Theme.DigitalCalculator" parent="Theme.Design.Light">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/orange</item>
         <item name="colorPrimaryVariant">@color/almostBlack</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColor">@color/black</item>
 
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
         <!-- Customize your theme here. -->
     </style>
+<!--    <style name="Theme.DigitalCalculatorDark" parent="Theme.AppCompat">-->
+<!--        &lt;!&ndash; Primary brand color. &ndash;&gt;-->
+<!--        <item name="colorPrimary">@color/orange</item>-->
+<!--        <item name="colorPrimaryVariant">@color/almostBlack</item>-->
+<!--        <item name="colorOnPrimary">@color/white</item>-->
+
+
+<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+<!--    </style>-->
 </resources>

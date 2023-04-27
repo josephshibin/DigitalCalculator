@@ -10,4 +10,12 @@
     <color name="red">#F00</color>
     <color name="almostBlack">#222</color>
     <color name="orange">#FF8c00</color>
+    <!-- Light Theme Colors -->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="backgroundLight">#FFFFFF</color>
+
+    <!-- Dark Theme Colors -->
+    <color name="backgroundDark">#000000</color>
 </resources>
