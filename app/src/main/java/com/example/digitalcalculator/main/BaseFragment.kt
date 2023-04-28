@@ -1,6 +1,7 @@
 package com.example.digitalcalculator.main
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
@@ -18,7 +19,7 @@ import com.example.digitalcalculator.databinding.FragmentBaseBinding
 import com.example.digitalcalculator.domain.HistoryAdapterItem
 import com.example.digitalcalculator.gestures.SwipeGestureListener
 import com.example.digitalcalculator.history.TempHistoryAdapter
-import com.example.digitalcalculator.viewmodel.MyViewModel
+import com.example.digitalcalculator.settings.viewmodel.MyViewModel
 import java.util.*
 
 class BaseFragment : Fragment() {
@@ -51,6 +52,8 @@ class BaseFragment : Fragment() {
 
         view.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
         setHasOptionsMenu(true)
+
+
         return view
     }
 
@@ -232,7 +235,7 @@ class BaseFragment : Fragment() {
         val expression = binding.workingsTV.text.toString()
         val result = binding.resultsTV.text.toString()
         addToTheHistory(expression, result)
-        textToSpeech.speak(result, TextToSpeech.QUEUE_FLUSH, null, null)
+            textToSpeech.speak(result, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     private fun calculateResults(): String {

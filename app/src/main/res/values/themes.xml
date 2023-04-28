@@ -3,20 +3,37 @@
     <style name="Theme.DigitalCalculator" parent="Theme.Design.Light">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/orange</item>
+        <item name="headingColour">@color/orange</item>
         <item name="colorPrimaryVariant">@color/almostBlack</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:textColor">@color/black</item>
-
-
-        <!-- Customize your theme here. -->
+        <item name="operatorBtnColor">@color/orange</item>
     </style>
-<!--    <style name="Theme.DigitalCalculatorDark" parent="Theme.AppCompat">-->
-<!--        &lt;!&ndash; Primary brand color. &ndash;&gt;-->
-<!--        <item name="colorPrimary">@color/orange</item>-->
-<!--        <item name="colorPrimaryVariant">@color/almostBlack</item>-->
-<!--        <item name="colorOnPrimary">@color/white</item>-->
 
+    <style name="AppTheme.Light" parent="Theme.Design.Light">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/navyBlue</item>
+        <item name="colorPrimaryVariant">@color/almostBlack</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="operatorBtnColor">@color/navyBlue</item>
+        <item name="headingColour">@color/navyBlue</item>
+    </style>
 
-<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
-<!--    </style>-->
+    <style name="reAccent" parent="Theme.DigitalCalculator">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/red</item>
+        <item name="colorPrimaryVariant">@color/almostBlack</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="operatorBtnColor">@color/red</item>
+    </style>
+    <style name="colour2" parent="Theme.DigitalCalculator">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/orange</item>
+        <item name="colorPrimaryVariant">@color/almostBlack</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="operatorBtnColor">#565898</item>
+    </style>
 </resources>

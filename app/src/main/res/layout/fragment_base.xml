@@ -77,13 +77,12 @@
         <Button
             android:id="@+id/clear_btn"
             style="@style/buttonNumber"
-            android:textColor="@color/red"
+            android:textColor="?attr/operatorBtnColor"
             android:onClick="allClearAction"
             android:text="AC"/>
         <Button
             android:id="@+id/back_btn"
-            style="@style/buttonNumber"
-            android:textColor="@color/red"
+            style="@style/buttonOperator"
             android:onClick="backSpaceAction"
             android:text="⌫"/>
         <Button
@@ -179,7 +178,7 @@
             android:id="@+id/equal_btn"
             style="@style/buttonNumber"
             android:layout_weight="2"
-            android:background="@color/orange"
+            android:background="?attr/operatorBtnColor"
             android:onClick="equalsAction"
             android:text="="
             android:textSize="40sp" />

@@ -1,5 +1,6 @@
 package com.example.digitalcalculator
 
+import android.app.UiModeManager
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,15 +11,19 @@ import androidx.navigation.ui.setupActionBarWithNavController
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Read the saved dark mode preference
+        // Read the saved theme preference
         val sharedPreferences = getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
-        val isDarkModeEnabled = sharedPreferences.getBoolean("isDarkModeEnabled", true)
+        val theme = sharedPreferences.getInt("theme", 0)
 
        //  Apply the appropriate theme
-        if (isDarkModeEnabled) {
+        if (theme==2) {
            setTheme(R.style.AppTheme_Dark)
-        } else {
+        } else if(theme==1) {
             setTheme(R.style.AppTheme_Light)
+        }else{
+            val uiModeManager = getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+            uiModeManager.nightMode = UiModeManager.MODE_NIGHT_AUTO
+
         }
 
         super.onCreate(savedInstanceState)

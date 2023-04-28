@@ -15,47 +15,18 @@
         <item name="android:onClick">numberAction</item>
     </style>
 
-    <style name="buttonOperator" parent="headingColor">
+    <style name="buttonOperator" >
         <item name="android:layout_weight">1</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@null</item>
+        <item name="android:textColor">?attr/operatorBtnColor</item>
         <item name="android:textSize">25sp</item>
         <item name="android:onClick">operationAction</item>
     </style>
-    <style name="headingColor">
-        <item name="android:textColor">@color/orange</item>
-    </style>
 
-<!--    <style name="textColor">-->
-<!--        <item name="android:textColor">@color/black</item>-->
-<!--    </style>-->
-    <!-- Light Theme -->
-    <style name="AppTheme.Light" parent="Theme.AppCompat.Light">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/orange</item>
-        <item name="colorPrimaryVariant">@color/almostBlack</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="android:textColor">@color/black</item>
+<!--     <attr name="operatorBtnColor" format="color" />-->
 
 
-        <!-- Customize your theme here. -->
-    </style>
-
-    <!-- Dark Theme -->
-    <style name="AppTheme.Dark" parent="Theme.AppCompat">
-           <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/orange</item>
-        <item name="colorPrimaryVariant">@color/almostBlack</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="android:textColor">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-    </style>
 
 </resources>

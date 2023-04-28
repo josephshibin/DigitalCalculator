@@ -9,7 +9,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.digitalcalculator.R
 import com.example.digitalcalculator.databinding.FragmentHistoryBinding
-import com.example.digitalcalculator.viewmodel.MyViewModel
+import com.example.digitalcalculator.settings.viewmodel.MyViewModel
 import com.example.mobilecalculator.HistoryAdapter
 
 

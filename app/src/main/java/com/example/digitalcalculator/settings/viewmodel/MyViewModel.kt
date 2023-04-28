@@ -1,4 +1,4 @@
-package com.example.digitalcalculator.viewmodel
+package com.example.digitalcalculator.settings.viewmodel
 
 import android.app.Application
 import android.content.Context
@@ -17,6 +17,13 @@ class MyViewModel(application: Application) : AndroidViewModel(application){
     // MutableLiveData to keep track of the state of the OutputVoice toggle button
     val toggleStateOfOutputVoice = MutableLiveData<Boolean>()
 
+
+    private val _selectedTheme = MutableLiveData<String>()
+    val selectedTheme: LiveData<String> =_selectedTheme
+    fun setselectedTheme(currentItem:String) {
+        _selectedTheme.value = currentItem
+    }
+
     // Function to set the state of the InputVoice toggle button
     fun setToggleForInput(isToggleButtonOn: Boolean) {
         toggleStateOfInputVoice.value = isToggleButtonOn
@@ -26,6 +33,8 @@ class MyViewModel(application: Application) : AndroidViewModel(application){
     fun setToggleForOutput(isToggleButtonOn: Boolean) {
         toggleStateOfOutputVoice.value = isToggleButtonOn
     }
+
+
 
     // history list
     val historyItems = mutableListOf<HistoryAdapterItem>()
