@@ -24,9 +24,19 @@
         <item name="android:textSize">25sp</item>
         <item name="android:onClick">operationAction</item>
     </style>
-
+    <style name="TextAppearance.CalculatorPlus.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textColor">?attr/textPrimary</item></style>
 <!--     <attr name="operatorBtnColor" format="color" />-->
-
+    <style name="Widget.CalculatorPlus.NumPad.Secondary" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">0dp</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="backgroundTint">?attr/operatorBtnColor</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="iconPadding">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+<!--        <item name="rippleColor">@color/button_ripple_primary</item>-->
+    </style>
 
 
 </resources>

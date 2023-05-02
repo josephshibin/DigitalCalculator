@@ -89,7 +89,10 @@ class BaseFragment : Fragment() {
             true
 
         }
-        binding.equalBtn.setOnClickListener { equalsAction(it) }
+        binding.equalBtn.setOnClickListener {
+            it.isHapticFeedbackEnabled = true
+            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            equalsAction(it) }
 
 
         gestureDetector = GestureDetector(requireContext(), SwipeGestureListener(
