@@ -57,23 +57,24 @@ class Settings : Fragment() {
 
     private fun showColorDialog() {
         val builder = AlertDialog.Builder(requireContext())
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.color_dialog, null)
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.color_dialog1, null)
         builder.setView(view)
          builder.create().show()
-        val redCheck = view.findViewById<ImageView>(R.id.red_check)
+        val colorDefault=view.findViewById<FrameLayout>(R.id.color_default)
+        val defaultCheck=view.findViewById<ImageView>(R.id.default_check)
+        val green=view.findViewById<FrameLayout>(R.id.color_green)
+        val greenCheck=view.findViewById<ImageView>(R.id.green_check)
+        val purple=view.findViewById<FrameLayout>(R.id.color_purple)
+        val purpleCheck=view.findViewById<ImageView>(R.id.purple_check)
+        val pink=view.findViewById<FrameLayout>(R.id.color_pink)
+        val pinkCheck=view.findViewById<ImageView>(R.id.pink_check)
         val red=view.findViewById<FrameLayout>(R.id.color_red)
-        val navyBlueCheck=view.findViewById<ImageView>(R.id.navyBlue_check)
-        val navyBlue=view.findViewById<FrameLayout>(R.id.color_navyBlue)
-        val orangeCheck=view.findViewById<ImageView>(R.id.orange_check)
-        val orange=view.findViewById<FrameLayout>(R.id.color_orange)
-        val primaryPinkCheck=view.findViewById<ImageView>(R.id.primaryPink_check)
-        val pink=view.findViewById<FrameLayout>(R.id.color_primaryPink)
-        val blackCheck=view.findViewById<ImageView>(R.id.black_check)
-        val black=view.findViewById<FrameLayout>(R.id.color_black)
-        val primaryGreyCheck=view.findViewById<ImageView>(R.id.primaryGrey_check)
-        val grey=view.findViewById<FrameLayout>(R.id.color_primaryGrey)
+        val redCheck = view.findViewById<ImageView>(R.id.red_check)
+        val grey=view.findViewById<FrameLayout>(R.id.color_grey)
+        val greyCheck=view.findViewById<ImageView>(R.id.grey_check)
 
-//        red.setOnLongClickListener {  }
+
+   //    colorDefault.setOnLongClickListener {  }
 
     }
 
