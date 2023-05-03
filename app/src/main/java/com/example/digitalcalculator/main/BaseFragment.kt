@@ -1,8 +1,11 @@
 package com.example.digitalcalculator.main
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
 import android.util.Log
@@ -24,6 +27,7 @@ import java.util.*
 class BaseFragment : Fragment() {
     private lateinit var binding: FragmentBaseBinding
     private lateinit var myViewModel: MyViewModel
+    private lateinit var vibrator: Vibrator
     private var canAddOperation = false
     private var canAddDecimal = true
     private var toggleStateOfInputVoice = false
@@ -49,14 +53,17 @@ class BaseFragment : Fragment() {
         binding = FragmentBaseBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
-        view.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
+        binding.mainLayout.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
+
         setHasOptionsMenu(true)
 
         return view
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
         binding.btn9.setOnClickListener { numberAction(it) }
         binding.btn8.setOnClickListener { numberAction(it) }
@@ -167,207 +174,278 @@ class BaseFragment : Fragment() {
 
     fun numberAction(view: View) {
 
-
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.EFFECT_TICK))
         if (binding.resultsTV.text.isEmpty()) {
             if (view is Button) {
                 if (view.text == ".") {
-                    if (canAddDecimal)
+                    if (binding.workingsTV.text.isEmpty()) {
+                        if (canAddDecimal) {
+                            binding.workingsTV.text = "0"
+                            binding.workingsTV.append(view.text)
+                            canAddDecimal = false
+                        }
+                    } else {
+                        if (canAddDecimal) {
+                            binding.workingsTV.append(view.text)
+                            canAddDecimal = false
+                        }
+                    }
+                }else
+                        binding.workingsTV.append(view.text)
+                    canAddOperation = true
+                }
+            } else {
+                binding.resultsTV.text = ""
+                binding.workingsTV.text = ""
+                if (view is Button) {
+
+                    if (view.text == ".") {
+
+                        if (binding.workingsTV.text.isEmpty()) {
+                            if (canAddDecimal) {
+                                binding.workingsTV.text = "0"
+                                binding.workingsTV.append(view.text)
+                                canAddDecimal = false
+                            }
+                        } else {
+                            if (canAddDecimal) {
+                                binding.workingsTV.append(view.text)
+                                canAddDecimal = false
+                            }
+                        }
+                    } else
                         binding.workingsTV.append(view.text)
 
-                    canAddDecimal = false
-                } else
-                    binding.workingsTV.append(view.text)
-
-                canAddOperation = true
+                    canAddOperation = true
+                }
+                addCalculationToTempHistory()
             }
-        } else {
-            binding.resultsTV.text = ""
-            binding.workingsTV.text = ""
+
+        }
+
+        private fun addCalculationToTempHistory() {
+            myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+
+            // adding item to the temporary history list
+            lastThreeItems.add(myViewModel.historyItems.last())
+            if (lastThreeItems.size > MAX_ITEMS) {
+                lastThreeItems.removeAt(0)
+            }
+            val recyclerView = binding.recyclerView
+            recyclerView.isNestedScrollingEnabled = false
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            val adapter = TempHistoryAdapter(lastThreeItems)
+            recyclerView.adapter = adapter
+            recyclerView.adapter?.notifyItemInserted(lastThreeItems.size + 1)
+        }
+
+        fun operationAction(view: View) {
             if (view is Button) {
-                if (view.text == ".") {
-                    if (canAddDecimal)
+                if (binding.workingsTV.text.isEmpty()) {
+
+                    if (view.text == "-") {
+                        vibrator.vibrate(
+                            VibrationEffect.createOneShot(
+                                100, VibrationEffect.EFFECT_TICK
+                            )
+                        )
                         binding.workingsTV.append(view.text)
-
-                    canAddDecimal = false
-                } else
-                    binding.workingsTV.append(view.text)
-
-                canAddOperation = true
-            }
-            addCalculationToTempHistory()
-        }
-
-    }
-
-    private fun addCalculationToTempHistory() {
-        myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
-
-        // adding item to the temporary history list
-        lastThreeItems.add(myViewModel.historyItems.last())
-        if (lastThreeItems.size > MAX_ITEMS) {
-            lastThreeItems.removeAt(0)
-        }
-        val recyclerView = binding.recyclerView
-        recyclerView.isNestedScrollingEnabled = false
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        val adapter = TempHistoryAdapter(lastThreeItems)
-        recyclerView.adapter = adapter
-        recyclerView.adapter?.notifyItemInserted(lastThreeItems.size + 1)
-    }
-
-    fun operationAction(view: View) {
-        if (view is Button && canAddOperation) {
-            binding.workingsTV.append(view.text)
-            canAddOperation = false
-            canAddDecimal = true
-        }
-    }
-
-    fun allClearAction(view: View) {
-        binding.workingsTV.text = ""
-        binding.resultsTV.text = ""
-    }
-
-    fun backSpaceAction(view: View) {
-        if (binding.resultsTV.text.isEmpty()) {
-            val length = binding.workingsTV.length()
-            if (length > 0)
-                binding.workingsTV.text = binding.workingsTV.text.subSequence(0, length - 1)
-        }
-    }
-
-    fun equalsAction(view: View) {
-        binding.resultsTV.text = calculateResults()
-        val expression = binding.workingsTV.text.toString()
-        val result = binding.resultsTV.text.toString()
-        addToTheHistory(expression, result)
-        textToSpeech.speak(result, TextToSpeech.QUEUE_FLUSH, null, null)
-    }
-
-    private fun calculateResults(): String {
-        val digitsOperators = digitsOperators()
-        if (digitsOperators.isEmpty()) return ""
-
-        val timesDivision = timesDivisionCalculate(digitsOperators)
-        if (timesDivision.isEmpty()) return ""
-
-        val result = addSubtractCalculate(timesDivision)
-        return result.toString()
-    }
-
-    private fun addSubtractCalculate(passedList: MutableList<Any>): Float {
-        var result = passedList[0] as Float
-
-        for (i in passedList.indices) {
-            if (passedList[i] is Char && i != passedList.lastIndex) {
-                val operator = passedList[i]
-                val nextDigit = passedList[i + 1] as Float
-                if (operator == '+')
-                    result += nextDigit
-                if (operator == '-')
-                    result -= nextDigit
-            }
-        }
-
-        return result
-    }
-
-    private fun timesDivisionCalculate(passedList: MutableList<Any>): MutableList<Any> {
-        var list = passedList
-        while (list.contains('x') || list.contains('/')) {
-            list = calcTimesDiv(list)
-        }
-        return list
-    }
-
-    private fun calcTimesDiv(passedList: MutableList<Any>): MutableList<Any> {
-        val newList = mutableListOf<Any>()
-        var restartIndex = passedList.size
-
-        for (i in passedList.indices) {
-            if (passedList[i] is Char && i != passedList.lastIndex && i < restartIndex) {
-                val operator = passedList[i]
-                val prevDigit = passedList[i - 1] as Float
-                val nextDigit = passedList[i + 1] as Float
-                when (operator) {
-                    'x' -> {
-                        newList.add(prevDigit * nextDigit)
-                        restartIndex = i + 1
+                        canAddOperation = false
+                        canAddDecimal = true
+                    } else if (canAddOperation) {
+                        vibrator.vibrate(
+                            VibrationEffect.createOneShot(
+                                100, VibrationEffect.EFFECT_TICK
+                            )
+                        )
+                        binding.workingsTV.append(view.text)
+                        canAddOperation = false
+                        canAddDecimal = true
                     }
-                    '/' -> {
-                        newList.add(prevDigit / nextDigit)
-                        restartIndex = i + 1
-                    }
-                    else -> {
-                        newList.add(prevDigit)
-                        newList.add(operator)
+                } else {
+                    val lastChar = binding.workingsTV.text.last()
+                    if (view.text == "-" && !"+-/x".contains(lastChar)) {  //&& lastChar != '-' Todo check for last "-"is present or not
+                        vibrator.vibrate(
+                            VibrationEffect.createOneShot(
+                                100, VibrationEffect.EFFECT_TICK
+                            )
+                        )
+                        binding.workingsTV.append(view.text)
+                        canAddOperation = false
+                        canAddDecimal = true
+                    } else if (canAddOperation && !"+-/x".contains(lastChar)) {
+                        vibrator.vibrate(
+                            VibrationEffect.createOneShot(
+                                100, VibrationEffect.EFFECT_TICK
+                            )
+                        )
+                        binding.workingsTV.append(view.text)
+                        canAddOperation = false
+                        canAddDecimal = true
                     }
                 }
             }
-
-            if (i > restartIndex)
-                newList.add(passedList[i])
         }
 
-        return newList
-    }
+        fun allClearAction(view: View) {
+            if (binding.workingsTV.text.isNotEmpty()) {
+                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.EFFECT_TICK))
+                binding.workingsTV.text = ""
+                binding.resultsTV.text = ""
+                canAddOperation = false
+                canAddDecimal = true
+            }
+        }
 
-    private fun digitsOperators(): MutableList<Any> {
-        val list = mutableListOf<Any>()
-        var currentDigit = ""
-        for (character in binding.workingsTV.text) {
-            if (character.isDigit() || character == '.')
-                currentDigit += character
-            else {
+        fun backSpaceAction(view: View) {
+            if (binding.workingsTV.text.isNotEmpty() && binding.resultsTV.text.isEmpty()) {
+                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.EFFECT_TICK))
+                if (binding.resultsTV.text.isEmpty()) {
+                    val length = binding.workingsTV.length()
+                    val lastChar = binding.workingsTV.text.last()
+
+                    canAddOperation = "-/+x".contains(lastChar)
+
+                    if (length > 0)
+                        binding.workingsTV.text = binding.workingsTV.text.subSequence(0, length - 1)
+                }
+            }
+        }
+
+        fun equalsAction(view: View) {
+            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.EFFECT_TICK))
+            binding.resultsTV.text = calculateResults()
+            val expression = binding.workingsTV.text.toString()
+            val result = binding.resultsTV.text.toString()
+            addToTheHistory(expression, result)
+            textToSpeech.speak(result, TextToSpeech.QUEUE_FLUSH, null, null)
+        }
+
+        private fun calculateResults(): String {
+            val digitsOperators = digitsOperators()
+            if (digitsOperators.isEmpty()) return ""
+
+            val timesDivision = timesDivisionCalculate(digitsOperators)
+            if (timesDivision.isEmpty()) return ""
+
+            val result = addSubtractCalculate(timesDivision)
+            return result.toString()
+        }
+
+        private fun addSubtractCalculate(passedList: MutableList<Any>): Float {
+            var result = passedList[0] as Float
+
+            for (i in passedList.indices) {
+                if (passedList[i] is Char && i != passedList.lastIndex) {
+                    val operator = passedList[i]
+                    val nextDigit = passedList[i + 1] as Float
+                    if (operator == '+')
+                        result += nextDigit
+                    if (operator == '-')
+                        result -= nextDigit
+                }
+            }
+
+            return result
+        }
+
+        private fun timesDivisionCalculate(passedList: MutableList<Any>): MutableList<Any> {
+            var list = passedList
+            while (list.contains('x') || list.contains('/')) {
+                list = calcTimesDiv(list)
+            }
+            return list
+        }
+
+        private fun calcTimesDiv(passedList: MutableList<Any>): MutableList<Any> {
+            val newList = mutableListOf<Any>()
+            var restartIndex = passedList.size
+
+            for (i in passedList.indices) {
+                if (passedList[i] is Char && i != passedList.lastIndex && i < restartIndex) {
+                    val operator = passedList[i]
+                    val prevDigit = passedList[i - 1] as Float
+                    val nextDigit = passedList[i + 1] as Float
+                    when (operator) {
+                        'x' -> {
+                            newList.add(prevDigit * nextDigit)
+                            restartIndex = i + 1
+                        }
+                        '/' -> {
+                            newList.add(prevDigit / nextDigit)
+                            restartIndex = i + 1
+                        }
+                        else -> {
+                            newList.add(prevDigit)
+                            newList.add(operator)
+                        }
+                    }
+                }
+
+                if (i > restartIndex)
+                    newList.add(passedList[i])
+            }
+
+            return newList
+        }
+
+        private fun digitsOperators(): MutableList<Any> {
+            val list = mutableListOf<Any>()
+            var currentDigit = ""
+            for (character in binding.workingsTV.text) {
+                if (character.isDigit() || character == '.')
+                    currentDigit += character
+                else {
+                    list.add(currentDigit.toFloat())
+                    currentDigit = ""
+                    list.add(character)
+                }
+            }
+
+            if (currentDigit != "")
                 list.add(currentDigit.toFloat())
-                currentDigit = ""
-                list.add(character)
-            }
+
+            return list
         }
 
-        if (currentDigit != "")
-            list.add(currentDigit.toFloat())
-
-        return list
-    }
-
-    private fun addToTheHistory(expression: String, result: String) {
-        if (expression.isNotEmpty() && result.isNotEmpty()) {
-            //passing the main history list to the adapter
-            val addingEqualSign = getString(R.string.result, result)
-            myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
-            myViewModel.historyItems.add(HistoryAdapterItem(expression, addingEqualSign))
-        }
-        // Log.i("list", myViewModel.historyItems.toString())
-    }
-
-
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu, menu)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-
-            R.id.settings -> {
-                view?.findNavController()?.navigate(R.id.action_baseFragment_to_settings)
+        private fun addToTheHistory(expression: String, result: String) {
+            if (expression.isNotEmpty() && result.isNotEmpty()) {
+                //passing the main history list to the adapter
+                val addingEqualSign = getString(R.string.result, result)
+                myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+                myViewModel.historyItems.add(HistoryAdapterItem(expression, addingEqualSign))
             }
-            R.id.historyFragment -> {
-                view?.findNavController()?.navigate(R.id.action_baseFragment_to_historyFragment2)
-            }
-
-
+            // Log.i("list", myViewModel.historyItems.toString())
         }
 
-        return true
+
+        @Deprecated("Deprecated in Java")
+        override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+            super.onCreateOptionsMenu(menu, inflater)
+            inflater.inflate(R.menu.menu, menu)
+        }
+
+        @Deprecated("Deprecated in Java")
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+            when (item.itemId) {
+
+                R.id.settings -> {
+                    view?.findNavController()?.navigate(R.id.action_baseFragment_to_settings)
+                }
+                R.id.historyFragment -> {
+                    view?.findNavController()
+                        ?.navigate(R.id.action_baseFragment_to_historyFragment2)
+                }
+
+
+            }
+
+            return true
+        }
+
+
     }
-
-
-}
 
 
 

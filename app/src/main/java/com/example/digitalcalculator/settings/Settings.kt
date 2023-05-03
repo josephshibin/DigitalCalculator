@@ -161,7 +161,7 @@ class Settings : Fragment() {
 
         binding.accent.setOnClickListener {
 
-                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+              //  vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
 
             if (colorDialog.root.parent != null) {
                 ((colorDialog.root.parent) as ViewGroup).removeView(colorDialog.root)
