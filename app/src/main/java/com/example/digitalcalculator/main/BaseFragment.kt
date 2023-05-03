@@ -1,7 +1,6 @@
 package com.example.digitalcalculator.main
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
@@ -53,12 +52,12 @@ class BaseFragment : Fragment() {
         view.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
         setHasOptionsMenu(true)
 
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.btn9.setOnClickListener { numberAction(it) }
         binding.btn8.setOnClickListener { numberAction(it) }
         binding.btn7.setOnClickListener { numberAction(it) }
@@ -77,14 +76,14 @@ class BaseFragment : Fragment() {
         binding.backBtn.setOnClickListener { backSpaceAction(it) }
         binding.clearBtn.setOnClickListener { allClearAction(it) }
         binding.clearBtn.setOnLongClickListener {
-            binding.workingsTV.text=""
-            binding.resultsTV.text=""
+            binding.workingsTV.text = ""
+            binding.resultsTV.text = ""
 //            val tempAdapter=TempHistoryAdapter(lastThreeItems)
 //            tempAdapter.clearHistory()
 //            tempAdapter.notifyDataSetChanged()
             lastThreeItems.clear()
-            Log.i("list",lastThreeItems.toString())
-            Toast.makeText(requireContext(),"Long press",Toast.LENGTH_SHORT).show()
+            Log.i("list", lastThreeItems.toString())
+            Toast.makeText(requireContext(), "Long press", Toast.LENGTH_SHORT).show()
             //lastThreeItems.clear()
             true
 
@@ -92,7 +91,8 @@ class BaseFragment : Fragment() {
         binding.equalBtn.setOnClickListener {
             it.isHapticFeedbackEnabled = true
             it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-            equalsAction(it) }
+            equalsAction(it)
+        }
 
 
         gestureDetector = GestureDetector(requireContext(), SwipeGestureListener(
@@ -166,6 +166,8 @@ class BaseFragment : Fragment() {
 
 
     fun numberAction(view: View) {
+
+
         if (binding.resultsTV.text.isEmpty()) {
             if (view is Button) {
                 if (view.text == ".") {
@@ -194,6 +196,7 @@ class BaseFragment : Fragment() {
             }
             addCalculationToTempHistory()
         }
+
     }
 
     private fun addCalculationToTempHistory() {
@@ -238,7 +241,7 @@ class BaseFragment : Fragment() {
         val expression = binding.workingsTV.text.toString()
         val result = binding.resultsTV.text.toString()
         addToTheHistory(expression, result)
-            textToSpeech.speak(result, TextToSpeech.QUEUE_FLUSH, null, null)
+        textToSpeech.speak(result, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     private fun calculateResults(): String {
@@ -331,7 +334,7 @@ class BaseFragment : Fragment() {
     private fun addToTheHistory(expression: String, result: String) {
         if (expression.isNotEmpty() && result.isNotEmpty()) {
             //passing the main history list to the adapter
-            val addingEqualSign=getString(R.string.result,result)
+            val addingEqualSign = getString(R.string.result, result)
             myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
             myViewModel.historyItems.add(HistoryAdapterItem(expression, addingEqualSign))
         }

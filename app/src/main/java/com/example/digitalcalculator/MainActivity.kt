@@ -8,23 +8,21 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.digitalcalculator.util.AccentTheme
+import com.example.digitalcalculator.util.AppPreference
+import com.example.digitalcalculator.util.getAccentTheme
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Read the saved theme preference
-        val sharedPreferences = getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
-        val theme = sharedPreferences.getInt("theme", 0)
 
-       //  Apply the appropriate theme
-        if (theme==2) {
-           setTheme(R.style.AppTheme_Dark)
-        } else if(theme==1) {
-            setTheme(R.style.AppTheme_Light)
-        }else{
-            val uiModeManager = getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
-            uiModeManager.nightMode = UiModeManager.MODE_NIGHT_AUTO
 
-        }
+
+        // Call the setTheme() method on the activity
+        val appPreference = AppPreference(this)
+        val accentTheme =
+            appPreference.getStringPreference(AppPreference.ACCENT_THEME, AccentTheme.BLUE.name)
+       this.setTheme(getAccentTheme(accentTheme))
+
 
         super.onCreate(savedInstanceState)
 

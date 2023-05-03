@@ -2,29 +2,57 @@
     <!-- Base application theme. -->
     <style name="Theme.DigitalCalculator" parent="Theme.AppCompat">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/orange</item>
-        <item name="headingColour">@color/orange</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="headingColour">@color/primary</item>
         <item name="colorPrimaryVariant">@color/almostBlack</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:textColor">@color/white</item>
-        <item name="operatorBtnColor">@color/orange</item>
+        <item name="operatorBtnColor">@color/primary</item>
     </style>
-    <style name="AppTheme.Dark" parent="Theme.AppCompat">
+    <style name="AppTheme.Green" parent="Theme.AppCompat">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/orange</item>
-        <item name="headingColour">@color/orange</item>
+        <item name="colorPrimary">@color/primaryGreen</item>
+        <item name="headingColour">@color/primaryGreen</item>
         <item name="colorPrimaryVariant">@color/almostBlack</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:textColor">@color/white</item>
-        <item name="operatorBtnColor">@color/orange</item>
+        <item name="operatorBtnColor">@color/primaryGreen</item>
     </style>
-    <style name="AppTheme.Dark1" parent="Theme.AppCompat">
+    <style name="AppTheme.Purple" parent="Theme.AppCompat">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/colorAccent</item>
-        <item name="headingColour">@color/colorAccent</item>
+        <item name="colorPrimary">@color/purple_200</item>
+        <item name="headingColour">@color/purple_200</item>
         <item name="colorPrimaryVariant">@color/almostBlack</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:textColor">@color/white</item>
-        <item name="operatorBtnColor">@color/colorAccent</item>
+        <item name="operatorBtnColor">@color/purple_200</item>
     </style>
+    <style name="AppTheme.Red" parent="Theme.AppCompat">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/red</item>
+        <item name="headingColour">@color/red</item>
+        <item name="colorPrimaryVariant">@color/almostBlack</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="operatorBtnColor">@color/red</item>
+    </style>
+    <style name="AppTheme.Grey" parent="Theme.AppCompat">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primaryGrey</item>
+        <item name="headingColour">@color/primaryGrey</item>
+        <item name="colorPrimaryVariant">@color/almostBlack</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="operatorBtnColor">@color/primaryGrey</item>
+    </style>
+    <style name="AppTheme.Pink" parent="Theme.AppCompat">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primaryPink</item>
+        <item name="headingColour">@color/primaryPink</item>
+        <item name="colorPrimaryVariant">@color/almostBlack</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="operatorBtnColor">@color/primaryPink</item>
+    </style>
+
 </resources>
