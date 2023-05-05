@@ -1,4 +1,4 @@
-package com.example.mobilecalculator
+package com.example.digitalcalculator.history.adapter
 
 import android.view.LayoutInflater
 import android.view.View

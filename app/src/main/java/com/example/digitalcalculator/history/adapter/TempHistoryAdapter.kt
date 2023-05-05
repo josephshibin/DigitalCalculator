@@ -1,4 +1,4 @@
-package com.example.digitalcalculator.history
+package com.example.digitalcalculator.history.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.digitalcalculator.R
 import com.example.digitalcalculator.domain.HistoryAdapterItem
-import com.example.mobilecalculator.HistoryAdapter
 
 
 class TempHistoryAdapter(private var lastThreeItems: MutableList<HistoryAdapterItem>) :

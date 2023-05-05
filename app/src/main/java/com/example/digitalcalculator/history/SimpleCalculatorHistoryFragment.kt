@@ -1,20 +1,17 @@
 package com.example.mobilecalculator.history
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.digitalcalculator.R
 import com.example.digitalcalculator.databinding.FragmentHistoryBinding
 import com.example.digitalcalculator.settings.viewmodel.MyViewModel
-import com.example.mobilecalculator.HistoryAdapter
+import com.example.digitalcalculator.history.adapter.HistoryAdapter
 
 
 
-class HistoryFragment : Fragment() {
+class SimpleCalculatorHistoryFragment : Fragment() {
     private lateinit var binding: FragmentHistoryBinding
 
 
@@ -41,30 +38,30 @@ class HistoryFragment : Fragment() {
          // setHasOptionsMenu(true)
         return view
     }
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.deletemenu, menu)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-
-            R.id.delete_history -> {
-                myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
-                val adapter = HistoryAdapter(myViewModel.historyItems)
-                adapter.clearHistory()
-
-            }
-
-
-
-        }
-
-        return true
-    }
+//    @Deprecated("Deprecated in Java")
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        super.onCreateOptionsMenu(menu, inflater)
+//        inflater.inflate(R.menu.settingsmenu, menu)
+//    }
+//
+//    @Deprecated("Deprecated in Java")
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//
+//        when (item.itemId) {
+//
+////            R.id.delete_history -> {
+////                myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+////                val adapter = HistoryAdapter(myViewModel.historyItems)
+////                adapter.clearHistory()
+////
+////            }
+//
+//
+//
+//        }
+//
+//        return true
+//    }
 
 
 

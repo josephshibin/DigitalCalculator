@@ -15,7 +15,7 @@ class MyViewModel(application: Application) : AndroidViewModel(application){
     val toggleStateOfInputVoice = MutableLiveData<Boolean>()
 
     // MutableLiveData to keep track of the state of the OutputVoice toggle button
-    val toggleStateOfOutputVoice = MutableLiveData<Boolean>()
+   val toggleStateOfOutputVoice = MutableLiveData<Boolean>()
 
 
     private val _selectedTheme = MutableLiveData<String>()

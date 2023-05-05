@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/idTVSecondary"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:gravity="bottom"
+        android:maxLines="1"
+        android:padding="10dp"
+        android:paddingTop="30dp"
+        android:text=""
+        android:textAlignment="viewEnd"
+        android:textSize="15sp"
+        tools:ignore="RtlCompat" />
+
+    <TextView
+        android:id="@+id/idTVprimary"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@id/idTVSecondary"
+        android:gravity="bottom"
+        android:maxLines="1"
+        android:padding="10dp"
+        android:text=""
+        android:textAlignment="viewEnd"
+        android:textSize="15sp"
+        tools:ignore="RtlCompat" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/idTVprimary"
+android:background="@null"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="7"
+
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="7">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <Button
+                            android:id="@+id/bac"
+                            style="@style/ScientificButtonOperator"
+                            android:text="AC"
+                            tools:targetApi="lollipop" />
+
+                        <Button
+                            android:id="@+id/bc"
+                            style="@style/ScientificButtonOperator"
+                            android:text="C"
+
+                             />
+
+                        <Button
+                            android:id="@+id/bbrac1"
+                            style="@style/ScientificButtonOperator"
+                            android:text="("
+
+                             />
+
+                        <Button
+                            android:id="@+id/bbrac2"
+                            style="@style/ScientificButtonOperator"
+                            android:text=")"
+
+                           />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="5">
+
+                        <Button
+                            android:id="@+id/bsin"
+                            style="@style/ScientificButtonOperator"
+                            android:text="sin"
+                            android:textAllCaps="false"
+
+                             />
+
+                        <Button
+                            android:id="@+id/bcos"
+                            style="@style/ScientificButtonOperator"
+                            android:text="cos"
+                            android:textAllCaps="false"
+
+                          />
+
+                        <Button
+                            android:id="@+id/btan"
+                            style="@style/ScientificButtonOperator"
+                            android:text="tan"
+                            android:textAllCaps="false"
+
+                           />
+
+                        <Button
+                            android:id="@+id/blog"
+                            style="@style/ScientificButtonOperator"
+                            android:text="log"
+                            android:textAllCaps="false"
+
+                            />
+
+                        <Button
+                            android:id="@+id/bln"
+                            style="@style/ScientificButtonOperator"
+                            android:text="ln"
+                            android:textAllCaps="false"
+
+                            />
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="5">
+
+                        <Button
+                            android:id="@+id/bfact"
+                            style="@style/ScientificButtonOperator"
+                            android:text="x!"
+                            android:textAllCaps="false"
+/>
+
+                        <Button
+                            android:id="@+id/bsquare"
+                            style="@style/ScientificButtonOperator"
+                            android:text="x²"
+                            android:textAllCaps="false"
+
+                            />
+
+                        <Button
+                            android:id="@+id/bsqrt"
+                            style="@style/ScientificButtonOperator"
+                            android:text="√"
+
+                           />
+
+                        <Button
+                            android:id="@+id/binv"
+                            style="@style/ScientificButtonOperator"
+                            android:text="1/x"
+                            android:textAllCaps="false"
+
+                            />
+
+                        <Button
+                            android:id="@+id/bdiv"
+                            style="@style/ScientificButtonOperator"
+                            android:text="÷"
+
+                           />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <Button
+                            android:id="@+id/b7"
+
+                            style="@style/ScientificButtonNumber"
+                            android:padding="6dp"
+                            android:text="7"
+ />
+
+                        <Button
+                            android:id="@+id/b8"
+                            style="@style/ScientificButtonNumber"
+                            android:text="8"
+ />
+
+                        <Button
+                            android:id="@+id/b9"
+                            style="@style/ScientificButtonNumber"
+                            android:text="9"
+ />
+
+                        <Button
+                            android:id="@+id/bmul"
+                            style="@style/ScientificButtonOperator"
+                            android:text="×"
+
+                             />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <Button
+                            android:id="@+id/b4"
+                            style="@style/ScientificButtonNumber"
+                            android:text="4"
+ />
+
+                        <Button
+                            android:id="@+id/b5"
+                            style="@style/ScientificButtonNumber"
+                            android:text="5"
+ />
+
+                        <Button
+                            android:id="@+id/b6"
+                            style="@style/ScientificButtonNumber"
+                            android:text="6"
+ />
+
+                        <Button
+                            android:id="@+id/bminus"
+                            style="@style/ScientificButtonOperator"
+                            android:text="-"
+
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <Button
+                            android:id="@+id/b1"
+                            style="@style/ScientificButtonNumber"
+                            android:text="1"
+
+                             />
+
+                        <Button
+                            android:id="@+id/b2"
+                            style="@style/ScientificButtonNumber"
+                            android:text="2"
+
+                            />
+
+                        <Button
+                            android:id="@+id/b3"
+                            style="@style/ScientificButtonNumber"
+                            android:text="3"
+
+                             />
+
+                        <Button
+                            android:id="@+id/bplus"
+                            style="@style/ScientificButtonOperator"
+                            android:text="+"
+
+                             />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <Button
+                            android:id="@+id/bpi"
+                            style="@style/ScientificButtonOperator"
+                            android:text="π"
+
+                          />
+
+                        <Button
+                            android:id="@+id/b0"
+                            style="@style/ScientificButtonNumber"
+                            android:text="0"
+
+                            />
+
+                        <Button
+                            android:id="@+id/bdot"
+                            style="@style/ScientificButtonNumber"
+                            android:text="."
+
+                           />
+
+                        <Button
+                            android:id="@+id/bequal"
+                            style="@style/ScientificEquallButton"
+                            android:padding="12dp"
+                            android:text="="
+
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
