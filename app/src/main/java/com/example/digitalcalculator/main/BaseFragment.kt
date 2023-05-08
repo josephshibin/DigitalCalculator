@@ -30,7 +30,7 @@ class BaseFragment : Fragment() {
        parentFragmentManager.beginTransaction().addToBackStack(null).commit()
    }
         binding.btnScientificCalculator.setOnClickListener {
-            it.findNavController().navigate(R.id.action_baseFragment_to_scientificCalculatorFragment2)
+            it.findNavController().navigate(R.id.action_baseFragment_to_scientificFragment)
         }
         return binding.root
     }

@@ -45,16 +45,15 @@
             android:id="@+id/action_baseFragment_to_settings"
             app:destination="@id/settings" />
         <action
-            android:id="@+id/action_baseFragment_to_scientificCalculatorFragment2"
-            app:destination="@id/scientificCalculatorFragment" />
+            android:id="@+id/action_baseFragment_to_scientificFragment"
+            app:destination="@id/scientificFragment" />
     </fragment>
     <fragment
-        android:id="@+id/scientificCalculatorFragment"
-        android:name="com.example.digitalcalculator.main.scientficcalculator.ScientificCalculatorFragment"
-        android:label="Scientific Calculator"
-        tools:layout="@layout/fragment_scientific_calculator">
+        android:id="@+id/scientificFragment"
+        android:name="com.example.digitalcalculator.main.scientficcalculator.ScientificFragment"
+        android:label="ScientificFragment" >
         <action
-            android:id="@+id/action_scientificCalculatorFragment_to_baseFragment3"
+            android:id="@+id/action_scientificFragment_to_baseFragment"
             app:destination="@id/baseFragment" />
     </fragment>
 </navigation>

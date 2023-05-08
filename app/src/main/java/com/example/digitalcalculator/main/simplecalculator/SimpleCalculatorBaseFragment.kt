@@ -16,12 +16,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.digitalcalculator.R
 import com.example.digitalcalculator.databinding.FragmentSimpleCalculatorBinding
 import com.example.digitalcalculator.domain.HistoryAdapterItem
 import com.example.digitalcalculator.gestures.SwipeGestureListener
 import com.example.digitalcalculator.history.adapter.TempHistoryAdapter
 import com.example.digitalcalculator.settings.viewmodel.MyViewModel
+import com.example.digitalcalculator.util.PrefUtil
 import java.util.*
 
 class SimpleCalculatorBaseFragment : Fragment() {
@@ -32,8 +34,9 @@ class SimpleCalculatorBaseFragment : Fragment() {
     private var canAddDecimal = true
     private var toggleStateOfInputVoice = false
     private val MAX_ITEMS = 3
-    private var lastThreeItems = mutableListOf<HistoryAdapterItem>()
-//    lateinit var recyclerView:RecyclerView
+    private lateinit var currentItem:HistoryAdapterItem
+   //  private var lastThreeItems = mutableListOf<HistoryAdapterItem>()
+   private lateinit var recyclerView: RecyclerView
 
     // swipe gesture
     private lateinit var gestureDetector: GestureDetector
@@ -56,6 +59,18 @@ class SimpleCalculatorBaseFragment : Fragment() {
         binding.mainLayout.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
 
         setHasOptionsMenu(true)
+        recyclerView = binding.recyclerView
+        if (savedInstanceState != null) {
+            recyclerView.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable("recycler_state"))
+        }
+
+//        myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+//        recyclerView.isNestedScrollingEnabled = false
+//        recyclerView.layoutManager = LinearLayoutManager(context)
+//        val adapter = TempHistoryAdapter(myViewModel.lastThreeItems)
+//        recyclerView.adapter = adapter
+
+
 
         return view
     }
@@ -88,8 +103,8 @@ class SimpleCalculatorBaseFragment : Fragment() {
 //            val tempAdapter=TempHistoryAdapter(lastThreeItems)
 //            tempAdapter.clearHistory()
 //            tempAdapter.notifyDataSetChanged()
-            lastThreeItems.clear()
-            Log.i("list", lastThreeItems.toString())
+          //  lastThreeItems.clear()
+            //Log.i("list", lastThreeItems.toString())
             Toast.makeText(requireContext(), "Long press", Toast.LENGTH_SHORT).show()
             //lastThreeItems.clear()
             true
@@ -252,17 +267,20 @@ class SimpleCalculatorBaseFragment : Fragment() {
     private fun addCalculationToTempHistory() {
         myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
 
+
+       // val lastItemAdded= myViewModel.historyItems.last()
         // adding item to the temporary history list
-        lastThreeItems.add(myViewModel.historyItems.last())
-        if (lastThreeItems.size > MAX_ITEMS) {
-            lastThreeItems.removeAt(0)
+        myViewModel.lastThreeItems.add(currentItem)
+       // lastThreeItems.add(lastItemAdded)
+        if ( myViewModel.lastThreeItems.size > MAX_ITEMS) {
+            myViewModel.lastThreeItems.removeAt(0)
         }
-        val recyclerView = binding.recyclerView
+        myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
         recyclerView.isNestedScrollingEnabled = false
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val adapter = TempHistoryAdapter(lastThreeItems)
+        val adapter = TempHistoryAdapter(myViewModel.lastThreeItems)
         recyclerView.adapter = adapter
-        recyclerView.adapter?.notifyItemInserted(lastThreeItems.size + 1)
+        recyclerView.adapter?.notifyDataSetChanged()
     }
 
     fun operationAction(view: View) {
@@ -343,7 +361,8 @@ class SimpleCalculatorBaseFragment : Fragment() {
         binding.resultsTV.text = calculateResults()
         val expression = binding.workingsTV.text.toString()
         val result = binding.resultsTV.text.toString()
-        addToTheHistory(expression, result)
+        currentItem=HistoryAdapterItem(expression,result)
+        addToTheHistory(currentItem)
         textToSpeech.speak(result, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
@@ -434,7 +453,9 @@ class SimpleCalculatorBaseFragment : Fragment() {
         return list
     }
 
-    private fun addToTheHistory(expression: String, result: String) {
+    private fun addToTheHistory(currentItem:HistoryAdapterItem) {
+        val expression=currentItem.expression
+        val result=currentItem.result
         if (expression.isNotEmpty() && result.isNotEmpty()) {
             //passing the main history list to the adapter
             val addingEqualSign = getString(R.string.result, result)
@@ -464,6 +485,28 @@ class SimpleCalculatorBaseFragment : Fragment() {
         return true
     }
 
+
+
+    override fun onStart() {
+        super.onStart()
+
+        binding.workingsTV.text = PrefUtil.getPrimaryTextBC(requireContext())
+        binding.resultsTV.text = PrefUtil.getSecondaryTextBC(requireContext())
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        PrefUtil.setPrimaryTextBC(requireContext(), binding.workingsTV.text.toString())
+        PrefUtil.setSecondaryTextBC(requireContext(), binding.resultsTV.text.toString())
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        recyclerView = binding.recyclerView
+
+        outState.putParcelable("listState", recyclerView.getLayoutManager()?.onSaveInstanceState())
+    }
 
 }
 
