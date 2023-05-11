@@ -9,8 +9,10 @@ import com.example.digitalcalculator.R
 import com.example.digitalcalculator.domain.HistoryAdapterItem
 
 
-class HistoryAdapter(private val historyItems: MutableList<HistoryAdapterItem>) :
+class HistoryAdapter() :
     RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
+
+    private var historyItems= emptyList<HistoryAdapterItem>()
 
   inner  class HistoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val historyExpression: TextView = view.findViewById(R.id.expression)
@@ -36,13 +38,18 @@ class HistoryAdapter(private val historyItems: MutableList<HistoryAdapterItem>) 
 //        notifyItemInserted(historyItems.size - 1)
 //    }
 
-    fun clearHistory() {
-        historyItems.clear()
+    fun setHistory(historyAdapterItem: List<HistoryAdapterItem>){
+        this.historyItems=historyAdapterItem
         notifyDataSetChanged()
     }
 
-    fun reverseHistory() {
-        historyItems.reverse()
-        notifyDataSetChanged()
-    }
+//    fun clearHistory() {
+//        historyItems.clear()
+//        notifyDataSetChanged()
+//    }
+//
+//    fun reverseHistory() {
+//        historyItems.reverse()
+//        notifyDataSetChanged()
+//    }
 }

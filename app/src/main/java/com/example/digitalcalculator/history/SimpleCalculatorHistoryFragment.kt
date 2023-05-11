@@ -5,17 +5,18 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.digitalcalculator.cache.model.toDomain
 import com.example.digitalcalculator.databinding.FragmentHistoryBinding
-import com.example.digitalcalculator.settings.viewmodel.MyViewModel
 import com.example.digitalcalculator.history.adapter.HistoryAdapter
-
+import com.example.digitalcalculator.history.historyviewmodel.HistoryViewModel
 
 
 class SimpleCalculatorHistoryFragment : Fragment() {
     private lateinit var binding: FragmentHistoryBinding
 
 
-    private lateinit var myViewModel: MyViewModel
+
+    private lateinit var historyViewModel: HistoryViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,12 +29,15 @@ class SimpleCalculatorHistoryFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
-        val adapter = HistoryAdapter(myViewModel.historyItems)
-        adapter.notifyItemInserted(myViewModel.historyItems.size+1)
-        // Log.i("list", myViewModel.historyItems.toString())
-       // adapter.reverseHistory()
-        recyclerView.adapter = adapter
+       historyViewModel = ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java)
+     historyViewModel.readAllData.observe(viewLifecycleOwner){it->
+        val   history= it.map { it.toDomain() }
+         val adapter = HistoryAdapter()
+         adapter.setHistory(history)
+         recyclerView.adapter = adapter
+        }
+
+
 
          // setHasOptionsMenu(true)
         return view

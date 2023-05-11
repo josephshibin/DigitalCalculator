@@ -8,11 +8,11 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,23 +20,31 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.digitalcalculator.R
 import com.example.digitalcalculator.databinding.FragmentSimpleCalculatorBinding
 import com.example.digitalcalculator.domain.HistoryAdapterItem
+import com.example.digitalcalculator.domain.toEntity
 import com.example.digitalcalculator.gestures.SwipeGestureListener
 import com.example.digitalcalculator.history.adapter.TempHistoryAdapter
-import com.example.digitalcalculator.settings.viewmodel.MyViewModel
+import com.example.digitalcalculator.history.historyviewmodel.HistoryViewModel
+import com.example.digitalcalculator.settings.viewmodel.MainViewModel
+import com.example.digitalcalculator.settings.viewmodel.ViewModel
+
 import com.example.digitalcalculator.util.PrefUtil
 import java.util.*
 
 class SimpleCalculatorBaseFragment : Fragment() {
     private lateinit var binding: FragmentSimpleCalculatorBinding
-    private lateinit var myViewModel: MyViewModel
+
+    //private lateinit var myViewModel: MainViewModel
+    private val myViewModel by viewModels<MainViewModel>()
+    private lateinit var historyViewModel: HistoryViewModel
     private lateinit var vibrator: Vibrator
     private var canAddOperation = false
     private var canAddDecimal = true
     private var toggleStateOfInputVoice = false
     private val MAX_ITEMS = 3
-    private lateinit var currentItem:HistoryAdapterItem
-   //  private var lastThreeItems = mutableListOf<HistoryAdapterItem>()
-   private lateinit var recyclerView: RecyclerView
+    private lateinit var currentItem: HistoryAdapterItem
+
+    //  private var lastThreeItems = mutableListOf<HistoryAdapterItem>()
+    private lateinit var recyclerView: RecyclerView
 
     // swipe gesture
     private lateinit var gestureDetector: GestureDetector
@@ -53,23 +61,22 @@ class SimpleCalculatorBaseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding =FragmentSimpleCalculatorBinding.inflate(layoutInflater, container, false)
+        binding = FragmentSimpleCalculatorBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
         binding.mainLayout.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
 
         setHasOptionsMenu(true)
         recyclerView = binding.recyclerView
-        if (savedInstanceState != null) {
-            recyclerView.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable("recycler_state"))
-        }
+//        if (savedInstanceState != null) {
+//            recyclerView.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable("recycler_state"))
+//        }
 
 //        myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
 //        recyclerView.isNestedScrollingEnabled = false
 //        recyclerView.layoutManager = LinearLayoutManager(context)
 //        val adapter = TempHistoryAdapter(myViewModel.lastThreeItems)
 //        recyclerView.adapter = adapter
-
 
 
         return view
@@ -103,7 +110,7 @@ class SimpleCalculatorBaseFragment : Fragment() {
 //            val tempAdapter=TempHistoryAdapter(lastThreeItems)
 //            tempAdapter.clearHistory()
 //            tempAdapter.notifyDataSetChanged()
-          //  lastThreeItems.clear()
+            //  lastThreeItems.clear()
             //Log.i("list", lastThreeItems.toString())
             Toast.makeText(requireContext(), "Long press", Toast.LENGTH_SHORT).show()
             //lastThreeItems.clear()
@@ -136,7 +143,7 @@ class SimpleCalculatorBaseFragment : Fragment() {
                 Toast.makeText(requireContext(), "Swipe Right", Toast.LENGTH_SHORT).show()
             }
         ))
-        myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+        //myViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         myViewModel.toggleStateOfInputVoice.observe(viewLifecycleOwner) { isOn ->
             toggleStateOfInputVoice = isOn
         }
@@ -265,22 +272,24 @@ class SimpleCalculatorBaseFragment : Fragment() {
     }
 
     private fun addCalculationToTempHistory() {
-        myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+        // if(binding.resultsTV.text.isNotEmpty()) {
+        // myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
 
 
-       // val lastItemAdded= myViewModel.historyItems.last()
+        // val lastItemAdded= myViewModel.historyItems.last()
         // adding item to the temporary history list
         myViewModel.lastThreeItems.add(currentItem)
-       // lastThreeItems.add(lastItemAdded)
-        if ( myViewModel.lastThreeItems.size > MAX_ITEMS) {
+        // lastThreeItems.add(lastItemAdded)
+        if (myViewModel.lastThreeItems.size > MAX_ITEMS) {
             myViewModel.lastThreeItems.removeAt(0)
         }
-        myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+        // myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
         recyclerView.isNestedScrollingEnabled = false
         recyclerView.layoutManager = LinearLayoutManager(context)
         val adapter = TempHistoryAdapter(myViewModel.lastThreeItems)
         recyclerView.adapter = adapter
         recyclerView.adapter?.notifyDataSetChanged()
+        //}
     }
 
     fun operationAction(view: View) {
@@ -361,7 +370,7 @@ class SimpleCalculatorBaseFragment : Fragment() {
         binding.resultsTV.text = calculateResults()
         val expression = binding.workingsTV.text.toString()
         val result = binding.resultsTV.text.toString()
-        currentItem=HistoryAdapterItem(expression,result)
+        currentItem = HistoryAdapterItem(expression, result)
         addToTheHistory(currentItem)
         textToSpeech.speak(result, TextToSpeech.QUEUE_FLUSH, null, null)
     }
@@ -416,10 +425,12 @@ class SimpleCalculatorBaseFragment : Fragment() {
                         newList.add(prevDigit * nextDigit)
                         restartIndex = i + 1
                     }
+
                     '/' -> {
                         newList.add(prevDigit / nextDigit)
                         restartIndex = i + 1
                     }
+
                     else -> {
                         newList.add(prevDigit)
                         newList.add(operator)
@@ -453,14 +464,19 @@ class SimpleCalculatorBaseFragment : Fragment() {
         return list
     }
 
-    private fun addToTheHistory(currentItem:HistoryAdapterItem) {
-        val expression=currentItem.expression
-        val result=currentItem.result
+    private fun addToTheHistory(currentItem: HistoryAdapterItem) {
+        val expression = currentItem.expression
+        val result = currentItem.result
         if (expression.isNotEmpty() && result.isNotEmpty()) {
             //passing the main history list to the adapter
             val addingEqualSign = getString(R.string.result, result)
-            myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
-            myViewModel.historyItems.add(HistoryAdapterItem(expression, addingEqualSign))
+//            myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+//            myViewModel.historyItems.add(HistoryAdapterItem(expression, addingEqualSign))
+            val history = HistoryAdapterItem(expression, result)
+            // adding to database
+            historyViewModel =
+                ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java)
+            historyViewModel.insert(history.toEntity())
         }
         // Log.i("list", myViewModel.historyItems.toString())
     }
@@ -484,7 +500,6 @@ class SimpleCalculatorBaseFragment : Fragment() {
 
         return true
     }
-
 
 
     override fun onStart() {

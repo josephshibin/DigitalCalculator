@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.digitalcalculator.settings.Settings
 import com.example.digitalcalculator.util.AccentTheme
 import com.example.digitalcalculator.util.AppPreference
 import com.example.digitalcalculator.util.AppPreference.Companion.ACCENT_THEME
@@ -19,6 +18,10 @@ class ViewModel(application: Application)  :AndroidViewModel(application) {
     private val _selectedTheme = MutableLiveData(getSelectedTheme())
     val selectedTheme: LiveData<AppTheme>
         get() = _selectedTheme
+
+
+//        private val _selectedTheme = MutableLiveData<String>()
+//    val selectedTheme: LiveData<String> =_selectedTheme
 
     private fun getSelectedTheme(): AppTheme {
         val themeName = appPreference.getStringPreference(APP_THEME, AppTheme.SYSTEM_DEFAULT.name)

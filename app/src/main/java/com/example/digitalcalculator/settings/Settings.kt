@@ -3,11 +3,8 @@ package com.example.digitalcalculator.settings
 import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
 import android.os.Vibrator
-import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,16 +16,21 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.digitalcalculator.R
 import com.example.digitalcalculator.databinding.ColorDialog1Binding
 import com.example.digitalcalculator.databinding.FragmentSettingsBinding
-import com.example.digitalcalculator.settings.viewmodel.MyViewModel
+import com.example.digitalcalculator.settings.viewmodel.MainViewModel
+
 import com.example.digitalcalculator.settings.viewmodel.ViewModel
 import com.example.digitalcalculator.util.AccentTheme
+import com.example.digitalcalculator.util.AppPreference
 import com.example.digitalcalculator.util.AppTheme
 import com.example.digitalcalculator.util.visible
 
 
 class Settings : Fragment() {
 
-    private lateinit var viewModel: MyViewModel
+    // private val appPreference = AppPreference(requireContext())
+
+    //private lateinit var mainViewModel: MainViewModel
+    private  val mainViewModel by viewModels<MainViewModel>()
 
     //private lateinit var settingsViewModel: ViewModel
     private val settingsViewModel by viewModels<ViewModel>()
@@ -45,19 +47,16 @@ class Settings : Fragment() {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
         // Initialize the ViewModel
-        viewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+        // viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
 
         // Initialize the SharedPreferences
         sharedPreferences =
             requireContext().getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
-        viewModel.selectedTheme.observe(viewLifecycleOwner) {
-            binding.selectedTheme.text = it
-        }
+
         setUpView()
         setUpObservables()
         return binding.root
     }
-
 
 
     private fun showOptionsDialog() {
@@ -79,26 +78,28 @@ class Settings : Fragment() {
             radioButton1.isChecked = true
         }
 
-        var selectedTheme=0
+        var selectedTheme = 0
 
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.system_default -> {
 
                     // settingsViewModel.changeTheme(AppTheme.SYSTEM_DEFAULT.ordinal)
-                    selectedTheme=AppTheme.SYSTEM_DEFAULT.ordinal
+                    selectedTheme = AppTheme.SYSTEM_DEFAULT.ordinal
 
                 }
+
                 R.id.light -> {
 
                     //settingsViewModel.changeTheme(AppTheme.LIGHT.ordinal)
-                    selectedTheme=AppTheme.LIGHT.ordinal
+                    selectedTheme = AppTheme.LIGHT.ordinal
 
                 }
+
                 R.id.dark -> {
 
                     //settingsViewModel.changeTheme(AppTheme.DARK.ordinal)
-                    selectedTheme=AppTheme.DARK.ordinal
+                    selectedTheme = AppTheme.DARK.ordinal
 
                 }
             }
@@ -118,8 +119,16 @@ class Settings : Fragment() {
     }
 
     private fun setUpObservables() {
-       settingsViewModel.selectedTheme.observe(viewLifecycleOwner) {
-           val theme=it.name.lowercase().capitalize()
+
+        binding.switchInputVoice.isChecked=sharedPreferences.getBoolean("input_voice_enabled",false)
+        binding.switchOutputVoice.isChecked = sharedPreferences.getBoolean("output_voice_enabled", false)
+
+
+//        settingsViewModel.selectedTheme.observe(viewLifecycleOwner) {
+//            binding.selectedTheme.text = it.toString()
+//        }
+        settingsViewModel.selectedTheme.observe(viewLifecycleOwner) {
+            val theme = it.name.lowercase().capitalize()
             binding.selectedTheme.text = theme
 
         }
@@ -161,7 +170,7 @@ class Settings : Fragment() {
 
         binding.accent.setOnClickListener {
 
-              //  vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+            //  vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
 
             if (colorDialog.root.parent != null) {
                 ((colorDialog.root.parent) as ViewGroup).removeView(colorDialog.root)
@@ -193,18 +202,23 @@ class Settings : Fragment() {
             AccentTheme.BLUE -> {
                 colorDialog.defaultCheck.visible(true)
             }
+
             AccentTheme.GREEN -> {
                 colorDialog.greenCheck.visible(true)
             }
+
             AccentTheme.PURPLE -> {
                 colorDialog.purpleCheck.visible(true)
             }
+
             AccentTheme.PINK -> {
                 colorDialog.pinkCheck.visible(true)
             }
+
             AccentTheme.RED -> {
                 colorDialog.redCheck.visible(true)
             }
+
             AccentTheme.GREY -> {
                 colorDialog.greyCheck.visible(true)
             }
@@ -217,11 +231,10 @@ class Settings : Fragment() {
         vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
 
-        // Set the switch's state to the value stored in SharedPreferences, defaulting to false
-        binding.switchOutputVoice.isChecked =
-            sharedPreferences.getBoolean("output_voice_enabled", false)
-        binding.switchInputVoice.isChecked =
-            sharedPreferences.getBoolean("input_voice_enabled", false)
+         // Set the switch's state to the value stored in SharedPreferences, defaulting to false
+
+//        binding.switchInputVoice.isChecked =
+//            sharedPreferences.getBoolean("input_voice_enabled", false)
 
         // Set the listener for the Output switch
         binding.switchOutputVoice.setOnCheckedChangeListener { _, isChecked ->
@@ -229,7 +242,7 @@ class Settings : Fragment() {
             sharedPreferences.edit().putBoolean("output_voice_enabled", isChecked).apply()
 
             // Update the ViewModel's toggle state
-            viewModel.setToggleForOutput(isChecked)
+            mainViewModel.setToggleForOutput(isChecked)
 
             // Vibrate for 50 milliseconds
 //            val vibrationEffect =
@@ -243,7 +256,7 @@ class Settings : Fragment() {
             sharedPreferences.edit().putBoolean("input_voice_enabled", isChecked).apply()
 
             // Update the ViewModel's toggle state
-            viewModel.setToggleForInput(isChecked)
+            mainViewModel.setToggleForInput(isChecked)
         }
 
 

@@ -17,6 +17,14 @@ class AppPreference(context: Context) {
         return sharedPreferences.getString(key, def)!!
     }
 
+    fun setInputToggle(key: String, value: Boolean) {
+        sharedPreferences.edit().putBoolean(key, value).apply()
+    }
+
+    fun getInputToggle(key: String, def: Boolean = false): Boolean {
+        return sharedPreferences.getBoolean(key, def)!!
+    }
+
     fun setIntPreference(key: String, value: Int) {
         sharedPreferences.edit().putInt(key, value).apply()
     }
