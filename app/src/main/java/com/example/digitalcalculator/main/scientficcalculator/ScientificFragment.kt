@@ -54,20 +54,8 @@ class ScientificFragment : Fragment() {
         addNumberValueToText(requireContext(), binding.btBracketCloseSC, binding.tvPrimarySC, 1)
 
         addOperatorValueToText(requireContext(), binding.btAdditionSC, binding.tvPrimarySC, "+", 1)
-        addOperatorValueToText(
-            requireContext(),
-            binding.btSubtractionSC,
-            binding.tvPrimarySC,
-            "-",
-            1
-        )
-        addOperatorValueToText(
-            requireContext(),
-            binding.btMultiplicationSC,
-            binding.tvPrimarySC,
-            "*",
-            1
-        )
+        addOperatorValueToText(requireContext(), binding.btSubtractionSC, binding.tvPrimarySC, "-", 1)
+        addOperatorValueToText(requireContext(), binding.btMultiplicationSC, binding.tvPrimarySC, "*", 1)
         addOperatorValueToText(requireContext(), binding.btDivisionSC, binding.tvPrimarySC, "/", 1)
 
         binding.btDotSC.setOnClickListener {

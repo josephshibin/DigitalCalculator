@@ -472,7 +472,7 @@ class SimpleCalculatorBaseFragment : Fragment() {
             val addingEqualSign = getString(R.string.result, result)
 //            myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
 //            myViewModel.historyItems.add(HistoryAdapterItem(expression, addingEqualSign))
-            val history = HistoryAdapterItem(expression, result)
+            val history = HistoryAdapterItem(expression, addingEqualSign)
             // adding to database
             historyViewModel =
                 ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java)
@@ -482,24 +482,24 @@ class SimpleCalculatorBaseFragment : Fragment() {
     }
 
 
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.history, menu)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.historyFragment -> {
-                view?.findNavController()
-                    ?.navigate(R.id.action_simpleCalculatorFragment_to_historyFragment)
-            }
-        }
-
-        return true
-    }
+//    @Deprecated("Deprecated in Java")
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        super.onCreateOptionsMenu(menu, inflater)
+//        inflater.inflate(R.menu.history, menu)
+//    }
+//
+//    @Deprecated("Deprecated in Java")
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//
+//        when (item.itemId) {
+//            R.id.historyFragment -> {
+//                view?.findNavController()
+//                    ?.navigate(R.id.action_simpleCalculatorFragment_to_historyFragment)
+//            }
+//        }
+//
+//        return true
+//    }
 
 
     override fun onStart() {

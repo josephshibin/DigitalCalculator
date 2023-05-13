@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_historyFragment_to_simpleCalculatorFragment"
             app:destination="@id/simpleCalculatorFragment" />
+        <action
+            android:id="@+id/action_historyFragment_to_twoInOneCalculator"
+            app:destination="@id/twoInOneCalculator" />
     </fragment>
     <fragment
         android:id="@+id/settings"
@@ -47,6 +50,9 @@
         <action
             android:id="@+id/action_baseFragment_to_scientificFragment"
             app:destination="@id/scientificFragment" />
+        <action
+            android:id="@+id/action_baseFragment_to_twoInOneCalculator"
+            app:destination="@id/twoInOneCalculator" />
     </fragment>
     <fragment
         android:id="@+id/scientificFragment"
@@ -55,5 +61,16 @@
         <action
             android:id="@+id/action_scientificFragment_to_baseFragment"
             app:destination="@id/baseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/twoInOneCalculator"
+        android:name="com.example.digitalcalculator.main.TwoInOneCalculator"
+        android:label="TwoInOneCalculator" >
+        <action
+            android:id="@+id/action_twoInOneCalculator_to_baseFragment"
+            app:destination="@id/baseFragment" />
+        <action
+            android:id="@+id/action_twoInOneCalculator_to_historyFragment"
+            app:destination="@id/historyFragment" />
     </fragment>
 </navigation>

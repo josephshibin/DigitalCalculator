@@ -20,6 +20,16 @@ object ButtonUtil {
         }
     }
 
+    fun addScientificValueToText(context: Context, textId: TextView, textViewId: TextView, id: Int?) {
+        textId.setOnClickListener {
+            vibratePhone(context)
+            textViewId.text = "${textViewId.text}${textId.text}"
+            when (id) {
+                1 -> addedSC = false
+            }
+        }
+    }
+
     fun addOperatorValueToText(context: Context, buttonId: Button, textViewId: TextView, text: String, id: Int) {
         buttonId.setOnClickListener {
             vibratePhone(context)

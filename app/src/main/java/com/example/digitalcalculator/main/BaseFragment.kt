@@ -1,5 +1,6 @@
 package com.example.digitalcalculator.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -32,6 +33,10 @@ class BaseFragment : Fragment() {
         binding.btnScientificCalculator.setOnClickListener {
             it.findNavController().navigate(R.id.action_baseFragment_to_scientificFragment)
         }
+
+       binding.button2.setOnClickListener {
+           it.findNavController().navigate(R.id.action_baseFragment_to_twoInOneCalculator)
+       }
         return binding.root
     }
 
