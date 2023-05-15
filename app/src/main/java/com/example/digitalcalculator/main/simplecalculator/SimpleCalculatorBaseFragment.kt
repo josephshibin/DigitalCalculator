@@ -34,7 +34,7 @@ class SimpleCalculatorBaseFragment : Fragment() {
     private lateinit var binding: FragmentSimpleCalculatorBinding
 
     //private lateinit var myViewModel: MainViewModel
-    private val myViewModel by viewModels<MainViewModel>()
+    private  lateinit var myViewModel :MainViewModel
     private lateinit var historyViewModel: HistoryViewModel
     private lateinit var vibrator: Vibrator
     private var canAddOperation = false
@@ -143,7 +143,7 @@ class SimpleCalculatorBaseFragment : Fragment() {
                 Toast.makeText(requireContext(), "Swipe Right", Toast.LENGTH_SHORT).show()
             }
         ))
-        //myViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        myViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         myViewModel.toggleStateOfInputVoice.observe(viewLifecycleOwner) { isOn ->
             toggleStateOfInputVoice = isOn
         }
@@ -161,14 +161,14 @@ class SimpleCalculatorBaseFragment : Fragment() {
 
     private fun onSwipeUpToVoiceInput() {
         // Handle swipe up gesture
-       // if (toggleStateOfInputVoice) {
+        if (toggleStateOfInputVoice) {
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             intent.putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
             )
             startActivityForResult(intent, SPEECH_REQUEST_CODE)
-       // }
+        }
 
 
     }

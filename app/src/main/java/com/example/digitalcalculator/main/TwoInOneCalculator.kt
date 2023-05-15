@@ -1,8 +1,11 @@
 package com.example.digitalcalculator.main
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build.VERSION_CODES.R
 import android.os.Bundle
+import android.speech.RecognizerIntent
+import android.view.GestureDetector
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -10,27 +13,39 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.digitalcalculator.R
 import com.example.digitalcalculator.databinding.FragmentTwoInOneBinding
 import com.example.digitalcalculator.domain.HistoryAdapterItem
 import com.example.digitalcalculator.domain.toEntity
+import com.example.digitalcalculator.gestures.SwipeGestureListener
 import com.example.digitalcalculator.history.historyviewmodel.HistoryViewModel
 import com.example.digitalcalculator.main.ScreenUtils.getScreenHeight
+import com.example.digitalcalculator.settings.viewmodel.MainViewModel
 
 import com.example.digitalcalculator.util.ButtonUtil
 import com.example.digitalcalculator.util.CalculationUtil
 import kotlin.math.sqrt
+import kotlin.properties.Delegates
 
 
 class TwoInOneCalculator : Fragment() {
     private lateinit var historyViewModel: HistoryViewModel
+    private lateinit var mainViewModel:MainViewModel
     private lateinit var binding: FragmentTwoInOneBinding
     private var isScientificCalculator = false
     private var isSecondEnable = true
     private var isDegreeEnable = true
+    private var toggleStateOfInputVoice =false
+
+    // swipe gesture
+    private lateinit var gestureDetector: GestureDetector
     private var isBackClearEnable=true
+
+    // voice input
+    private val SPEECH_REQUEST_CODE = 0
 
 
     companion object {
@@ -45,14 +60,44 @@ class TwoInOneCalculator : Fragment() {
 
 
         binding = FragmentTwoInOneBinding.inflate(layoutInflater, container, false)
+        binding.mainLayout.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
+        setUpObservables()
 
         setScreen(0.40)
         setHasOptionsMenu(true)
         return binding.root
     }
 
+    private fun setUpObservables() {
+
+        mainViewModel=ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        mainViewModel.toggleStateOfInputVoice.observe(viewLifecycleOwner){
+            toggleStateOfInputVoice=it
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        gestureDetector = GestureDetector(requireContext(), SwipeGestureListener(
+            onSwipeUp = {
+                // handle swipe up
+                Toast.makeText(requireContext(), "Swipe Up", Toast.LENGTH_SHORT).show()
+                onSwipeUpToVoiceInput()
+            },
+            onSwipeDown = {
+                // handle swipe down
+                Toast.makeText(requireContext(), "Swipe Down", Toast.LENGTH_SHORT).show()
+            },
+            onSwipeLeft = {
+                // handle swipe left
+                Toast.makeText(requireContext(), "Swipe Left", Toast.LENGTH_SHORT).show()
+            },
+            onSwipeRight = {
+                // handle swipe right
+                Toast.makeText(requireContext(), "Swipe Right", Toast.LENGTH_SHORT).show()
+            }
+        ))
 
         binding.btnChangeCalculator1.setOnClickListener {
             if (isScientificCalculator) {
@@ -238,6 +283,7 @@ class TwoInOneCalculator : Fragment() {
                 }
             } catch (e: Exception) {
                 ButtonUtil.invalidInputToast(requireContext())
+
             }
         }
 
@@ -326,6 +372,20 @@ class TwoInOneCalculator : Fragment() {
 
             if (binding.tvInputCalculation.text.isNotEmpty()) binding.tvInputCalculation.text =
                 binding.tvInputCalculation.text.subSequence(0, binding.tvInputCalculation.length() - 1)
+        }
+
+        binding.btnPercentage.setOnClickListener {
+            try {
+                if (binding.tvInputCalculation.text.isEmpty()) ButtonUtil.enterNumberToast(requireContext())
+                else {
+                    val input = binding.tvInputCalculation.text.toString()
+                    val result = (input.toFloat()/100).toString()
+                    binding.tvInputCalculation.text = CalculationUtil.trimResult(result)
+                    binding.tvEqualCalculation.text = "$input%"
+                }
+            } catch (e: Exception) {
+                ButtonUtil.invalidInputToast(requireContext())
+            }
         }
 
         binding.btnEqual.setOnClickListener {
@@ -458,6 +518,27 @@ class TwoInOneCalculator : Fragment() {
             historyViewModel.insert(history.toEntity())
         }
     }
+    private fun onSwipeUpToVoiceInput() {
+        // Handle swipe up gesture
+
+        mainViewModel=ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        mainViewModel.toggleStateOfInputVoice.observe(viewLifecycleOwner) {
+
+        }
+
+
+            if (true) {
+                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                intent.putExtra(
+                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                )
+                startActivityForResult(intent, SPEECH_REQUEST_CODE)
+            }
+
+
+    }
+
     @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".TwoInOneCalculator">
@@ -21,23 +22,21 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="128dp"
+                android:layout_height="150dp"
                 tools:ignore="MissingConstraints">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="gsfsdhfwhf"/>
+
 
             </FrameLayout>
 
             <TextView
                 android:id="@+id/tvInputCalculation"
+
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:padding="@dimen/_10sdp"
-                android:textSize="@dimen/_18ssp"
+               android:paddingEnd="@dimen/_10sdp"
+                android:textSize="@dimen/_20ssp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/tvEqualCalculation"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -47,10 +46,11 @@
             <TextView
                 android:id="@+id/tvEqualCalculation"
                 android:layout_width="0dp"
+
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:padding="@dimen/_10sdp"
-                android:textSize="@dimen/_20ssp"
+                android:textSize="@dimen/_18ssp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/lineDivider"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -11,9 +11,12 @@ import com.example.digitalcalculator.main.TwoInOneCalculator.Companion.addedSC
 
 
 object ButtonUtil {
+
+    private lateinit var vibrator: Vibrator
     fun addNumberValueToText(context: Context, buttonId: Button, textViewId: TextView,backClearBtn:Button ,id: Int?) {
         buttonId.setOnClickListener {
             vibratePhone(context)
+
             backClearBtn.isEnabled=true
             textViewId.text = "${textViewId.text}${buttonId.text}"
             when (id) {
@@ -47,12 +50,11 @@ object ButtonUtil {
         }
     }
 
-    fun vibratePhone(context: Context) {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        if (Build.VERSION.SDK_INT >= 29) vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK))
-        else vibrator.vibrate(10)
-    }
 
+    fun vibratePhone(context: Context) {
+    vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.EFFECT_TICK))
+}
     fun enterNumberToast(context: Context) {
         Toast.makeText(context, "enter the number", Toast.LENGTH_SHORT).show()
     }
