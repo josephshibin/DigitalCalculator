@@ -29,14 +29,15 @@ class Settings : Fragment() {
 
     // private val appPreference = AppPreference(requireContext())
 
-    //private lateinit var mainViewModel: MainViewModel
-    private  val mainViewModel by viewModels<MainViewModel>()
+    private lateinit var mainViewModel: MainViewModel
+   // private  val mainViewModel by viewModels<MainViewModel>()
 
     //private lateinit var settingsViewModel: ViewModel
     private val settingsViewModel by viewModels<ViewModel>()
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var vibrator: Vibrator
     private lateinit var binding: FragmentSettingsBinding
+
 
 
     override fun onCreateView(
@@ -47,7 +48,7 @@ class Settings : Fragment() {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
         // Initialize the ViewModel
-        // viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
+         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         // Initialize the SharedPreferences
         sharedPreferences =
@@ -242,7 +243,7 @@ class Settings : Fragment() {
             sharedPreferences.edit().putBoolean("output_voice_enabled", isChecked).apply()
 
             // Update the ViewModel's toggle state
-            mainViewModel.setToggleForOutput(isChecked)
+            //mainViewModel.setToggleForOutput(isChecked)
 
             // Vibrate for 50 milliseconds
 //            val vibrationEffect =
@@ -256,7 +257,7 @@ class Settings : Fragment() {
             sharedPreferences.edit().putBoolean("input_voice_enabled", isChecked).apply()
 
             // Update the ViewModel's toggle state
-            mainViewModel.setToggleForInput(isChecked)
+          //  mainViewModel.setToggleForInput(isChecked)
         }
 
 

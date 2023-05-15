@@ -1,10 +1,14 @@
 package com.example.digitalcalculator.main
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build.VERSION_CODES.R
 import android.os.Bundle
 import android.speech.RecognizerIntent
+import android.speech.tts.TextToSpeech
 import android.view.GestureDetector
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -27,29 +31,35 @@ import com.example.digitalcalculator.settings.viewmodel.MainViewModel
 
 import com.example.digitalcalculator.util.ButtonUtil
 import com.example.digitalcalculator.util.CalculationUtil
+import java.util.Locale
 import kotlin.math.sqrt
 import kotlin.properties.Delegates
 
 
 class TwoInOneCalculator : Fragment() {
     private lateinit var historyViewModel: HistoryViewModel
-    private lateinit var mainViewModel:MainViewModel
+    private lateinit var mainViewModel: MainViewModel
     private lateinit var binding: FragmentTwoInOneBinding
+    private lateinit var sharedPreferences: SharedPreferences
     private var isScientificCalculator = false
     private var isSecondEnable = true
     private var isDegreeEnable = true
-    private var toggleStateOfInputVoice =false
+    //private var toggleStateOfInputVoice =false
 
     // swipe gesture
     private lateinit var gestureDetector: GestureDetector
-    private var isBackClearEnable=true
+    private var isBackClearEnable = true
 
     // voice input
     private val SPEECH_REQUEST_CODE = 0
 
+    // text to speech
+    private lateinit var textToSpeech: TextToSpeech
+
 
     companion object {
-        var addedSC = false
+        var addedOperator = false
+        var addedTrigno = false
     }
 
     override fun onCreateView(
@@ -61,23 +71,27 @@ class TwoInOneCalculator : Fragment() {
 
         binding = FragmentTwoInOneBinding.inflate(layoutInflater, container, false)
         binding.mainLayout.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
-        setUpObservables()
+        // Initialize the SharedPreferences
+        sharedPreferences =
+            requireContext().getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
+
 
         setScreen(0.40)
         setHasOptionsMenu(true)
         return binding.root
     }
 
-    private fun setUpObservables() {
-
-        mainViewModel=ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        mainViewModel.toggleStateOfInputVoice.observe(viewLifecycleOwner){
-            toggleStateOfInputVoice=it
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //text to speech
+        textToSpeech = TextToSpeech(requireContext(), TextToSpeech.OnInitListener { status ->
+            if (status != TextToSpeech.ERROR) {
+                textToSpeech.language = Locale.US
+            }
+        })
+
 
         gestureDetector = GestureDetector(requireContext(), SwipeGestureListener(
             onSwipeUp = {
@@ -130,132 +144,132 @@ class TwoInOneCalculator : Fragment() {
         ButtonUtil.addNumberValueToText(
             requireContext(),
             binding.btnZero,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear, binding.tvEqualCalculation,
             1
         )
         ButtonUtil.addNumberValueToText(
             requireContext(),
             binding.btnOne,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear, binding.tvEqualCalculation,
             1
         )
         ButtonUtil.addNumberValueToText(
             requireContext(),
             binding.btnTwo,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear, binding.tvEqualCalculation,
             1
         )
         ButtonUtil.addNumberValueToText(
             requireContext(),
             binding.btnThree,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear, binding.tvEqualCalculation,
             1
         )
         ButtonUtil.addNumberValueToText(
             requireContext(),
             binding.btnFour,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear, binding.tvEqualCalculation,
             1
         )
         ButtonUtil.addNumberValueToText(
             requireContext(),
             binding.btnFive,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear, binding.tvEqualCalculation,
             1
         )
         ButtonUtil.addNumberValueToText(
             requireContext(),
             binding.btnSix,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear, binding.tvEqualCalculation,
             1
         )
         ButtonUtil.addNumberValueToText(
             requireContext(),
             binding.btnSeven,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear, binding.tvEqualCalculation,
             1
         )
         ButtonUtil.addNumberValueToText(
             requireContext(),
             binding.btnEight,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear, binding.tvEqualCalculation,
             1
         )
         ButtonUtil.addNumberValueToText(
             requireContext(),
             binding.btnNine,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear, binding.tvEqualCalculation,
             1
         )
 
         ButtonUtil.addScientificValueToText(
             requireContext(),
             binding.btnSin,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear,
             1
         )
         ButtonUtil.addScientificValueToText(
             requireContext(),
             binding.btnCos,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear,
             1
         )
         ButtonUtil.addScientificValueToText(
             requireContext(),
             binding.btnTan,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear,
             1
         )
         ButtonUtil.addScientificValueToText(
             requireContext(),
             binding.btnLog,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear,
             1
         )
         ButtonUtil.addScientificValueToText(
             requireContext(),
             binding.btnNaturalLog,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear,
             1
         )
         ButtonUtil.addScientificValueToText(
             requireContext(),
             binding.btnParenthesisStart,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear,
             1
         )
         ButtonUtil.addScientificValueToText(
             requireContext(),
             binding.btnParenthesisClose,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear,
             1
         )
 
         ButtonUtil.addOperatorValueToText(
             requireContext(),
             binding.btnAddition,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear,
             "+",
             1
         )
         ButtonUtil.addOperatorValueToText(
             requireContext(),
             binding.btnSubtraction,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear,
             "-",
             1
         )
         ButtonUtil.addOperatorValueToText(
             requireContext(),
             binding.btnMultiplication,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear,
             "*",
             1
         )
         ButtonUtil.addOperatorValueToText(
             requireContext(),
             binding.btnDivision,
-            binding.tvInputCalculation,binding.btnBackClear,
+            binding.tvInputCalculation, binding.btnBackClear,
             "/",
             1
         )
@@ -268,18 +282,26 @@ class TwoInOneCalculator : Fragment() {
 
         binding.btnPi.setOnClickListener {
             ButtonUtil.vibratePhone(requireContext())
-
-            binding.tvInputCalculation.text = binding.tvInputCalculation.text.toString() + "3.142"
-            binding.tvEqualCalculation.text = binding.btnPi.text.toString()
+            if (binding.tvInputCalculation.text.isEmpty() && binding.tvEqualCalculation.text.isEmpty()) {
+                binding.tvEqualCalculation.text =
+                    binding.tvEqualCalculation.text.toString() + "3.142"
+                binding.tvInputCalculation.text = binding.btnPi.text.toString()
+            }
+            if(addedOperator){
+                binding.tvInputCalculation.text = binding.tvInputCalculation.text.toString() + "3.142"
+            }
         }
 
         binding.btnPower.setOnClickListener {
             try {
-                if (binding.tvInputCalculation.text.isEmpty()) ButtonUtil.enterNumberToast(requireContext())
+                if (binding.tvInputCalculation.text.isEmpty()) ButtonUtil.enterNumberToast(
+                    requireContext()
+                )
                 else {
-                 //TODO
+                    //TODO
                     val input = binding.tvInputCalculation.text.toString()
                     binding.tvInputCalculation.text = "$input^("
+
                 }
             } catch (e: Exception) {
                 ButtonUtil.invalidInputToast(requireContext())
@@ -291,46 +313,38 @@ class TwoInOneCalculator : Fragment() {
             ButtonUtil.vibratePhone(requireContext())
 
             try {
-                if (binding.tvInputCalculation.text.isEmpty()) ButtonUtil.enterNumberToast(requireContext())
+                if (binding.tvInputCalculation.text.isEmpty()) ButtonUtil.enterNumberToast(
+                    requireContext()
+                )
                 else {
                     val input = binding.tvInputCalculation.text.toString()
                     var factorial = 1.0
                     for (i in 1..input.toLong()) {
                         factorial *= i
                     }
-                    binding.tvInputCalculation.text = CalculationUtil.trimResult(factorial.toString())
-                    binding.tvEqualCalculation.text = "$input!"
+                    binding.tvEqualCalculation.text =
+                        CalculationUtil.trimResult(factorial.toString())
+                    binding.tvInputCalculation.text = "$input!"
                 }
             } catch (e: Exception) {
                 ButtonUtil.invalidInputToast(requireContext())
             }
         }
-        binding.btnSquareRoot.setOnClickListener {
-            ButtonUtil.vibratePhone(requireContext())
 
-            try {
-                if (binding.tvInputCalculation.text.isEmpty()) ButtonUtil.enterNumberToast(requireContext())
-                else {
-                    val input = binding.tvInputCalculation.text.toString()
-                    val result = (input.toFloat() * input.toFloat()).toString()
-                    binding.tvInputCalculation.text = CalculationUtil.trimResult(result)
-                    binding.tvEqualCalculation.text = "$input²"
-                }
-            } catch (e: Exception) {
-                ButtonUtil.invalidInputToast(requireContext())
-            }
-        }
 
         binding.btnMultiplicativeInverse.setOnClickListener {
             ButtonUtil.vibratePhone(requireContext())
 
             try {
-                if (binding.tvInputCalculation.text.isEmpty()) ButtonUtil.enterNumberToast(requireContext())
+                if (binding.tvInputCalculation.text.isEmpty()) ButtonUtil.enterNumberToast(
+                    requireContext()
+                )
                 else {
                     val input = binding.tvInputCalculation.text.toString()
                     val result = (1 / input.toFloat()).toString()
-                    binding.tvInputCalculation.text = CalculationUtil.trimResult(result)
-                    binding.tvEqualCalculation.text = "1/$input"
+                    binding.tvEqualCalculation.text = CalculationUtil.trimResult(result)
+                    binding.tvInputCalculation.text = "1/$input"
+                    textToSpeech(binding.tvInputCalculation.text.toString())
                 }
             } catch (e: Exception) {
                 ButtonUtil.invalidInputToast(requireContext())
@@ -341,12 +355,15 @@ class TwoInOneCalculator : Fragment() {
             ButtonUtil.vibratePhone(requireContext())
 
             try {
-                if (binding.tvInputCalculation.text.isEmpty()) ButtonUtil.enterNumberToast(requireContext())
+                if (binding.tvInputCalculation.text.isEmpty()) ButtonUtil.enterNumberToast(
+                    requireContext()
+                )
                 else {
                     val input = binding.tvInputCalculation.text.toString()
                     val result = (sqrt(input.toFloat())).toString()
-                    binding.tvInputCalculation.text = CalculationUtil.trimResult(result)
-                    binding.tvEqualCalculation.text = "√$input"
+                    binding.tvEqualCalculation.text = CalculationUtil.trimResult(result)
+                    binding.tvInputCalculation.text = "√$input"
+                    textToSpeech(binding.tvEqualCalculation.text.toString())
                 }
             } catch (e: Exception) {
                 ButtonUtil.invalidInputToast(requireContext())
@@ -358,7 +375,7 @@ class TwoInOneCalculator : Fragment() {
 
             binding.tvInputCalculation.text = ""
             binding.tvEqualCalculation.text = ""
-            addedSC = false
+            addedOperator = false
         }
 
         binding.btnBackClear.setOnClickListener {
@@ -368,20 +385,26 @@ class TwoInOneCalculator : Fragment() {
                 binding.tvInputCalculation.text.contains("-") ||
                 binding.tvInputCalculation.text.contains("*") ||
                 binding.tvInputCalculation.text.contains("/")
-            ) addedSC = false
+            ) addedOperator = false
 
             if (binding.tvInputCalculation.text.isNotEmpty()) binding.tvInputCalculation.text =
-                binding.tvInputCalculation.text.subSequence(0, binding.tvInputCalculation.length() - 1)
+                binding.tvInputCalculation.text.subSequence(
+                    0,
+                    binding.tvInputCalculation.length() - 1
+                )
         }
 
         binding.btnPercentage.setOnClickListener {
             try {
-                if (binding.tvInputCalculation.text.isEmpty()) ButtonUtil.enterNumberToast(requireContext())
+                if (binding.tvInputCalculation.text.isEmpty()) ButtonUtil.enterNumberToast(
+                    requireContext()
+                )
                 else {
                     val input = binding.tvInputCalculation.text.toString()
-                    val result = (input.toFloat()/100).toString()
+                    val result = (input.toFloat() / 100).toString()
                     binding.tvInputCalculation.text = CalculationUtil.trimResult(result)
                     binding.tvEqualCalculation.text = "$input%"
+                    textToSpeech(binding.tvInputCalculation.text.toString())
                 }
             } catch (e: Exception) {
                 ButtonUtil.invalidInputToast(requireContext())
@@ -389,26 +412,8 @@ class TwoInOneCalculator : Fragment() {
         }
 
         binding.btnEqual.setOnClickListener {
-            ButtonUtil.vibratePhone(requireContext())
-            try {
-                if (binding.tvInputCalculation.text.isNotEmpty()) {
-                    val input = binding.tvInputCalculation.text.toString()
-                    val result = CalculationUtil.evaluate(input).toString()
-                    binding.tvInputCalculation.text = CalculationUtil.trimResult(result)
-                    binding.tvEqualCalculation.text = input
-                    addedSC = false
-                }
-            } catch (e: Exception) {
-                ButtonUtil.invalidInputToast(requireContext())
-            }
-            val expression=binding.tvEqualCalculation.text.toString()
-            val result=binding.tvInputCalculation.text.toString()
-            val currentItem=HistoryAdapterItem(expression,result)
-            addToTheHistory(currentItem)
-//            if(isBackClearEnable){
-//                isBackClearEnable=false
-                binding.btnBackClear.isEnabled=false
-          //  }
+            equalAction()
+
         }
 
         binding.btnSecond.setOnClickListener {
@@ -416,6 +421,33 @@ class TwoInOneCalculator : Fragment() {
         }
         binding.btnDegree.setOnClickListener {
             changingDegree()
+        }
+
+
+    }
+
+    private fun equalAction() {
+        ButtonUtil.vibratePhone(requireContext())
+        try {
+            if (binding.tvInputCalculation.text.isNotEmpty()) {
+                val input = binding.tvInputCalculation.text.toString()
+                val result = CalculationUtil.evaluate(input).toString()
+              val finalResult  = CalculationUtil.trimResult(result)
+                binding.tvInputCalculation.text = input
+                binding.tvEqualCalculation.text = "= $finalResult"
+                addedOperator = false
+                val answer = binding.tvEqualCalculation.text.toString()
+                val expression = binding.tvInputCalculation.text.toString()
+                val currentItem = HistoryAdapterItem(expression, answer)
+                addToTheHistory(currentItem)
+                // below line make the back clear button disable after getting the result
+                //  it will be enabled wen other button is clicked
+                binding.btnBackClear.isEnabled = false
+                textToSpeech(answer)
+            }
+        } catch (e: Exception) {
+            ButtonUtil.invalidInputToast(requireContext())
+            textToSpeech("Invalid Input")
         }
 
 
@@ -471,20 +503,19 @@ class TwoInOneCalculator : Fragment() {
         }
 
 
-
     }
 
     private fun changingSecond() {
         if (isSecondEnable) {
-                isSecondEnable = false
-                binding.btnSin.text = resources.getText(com.example.digitalcalculator.R.string.arcsin)
-                binding.btnCos.text = resources.getText(com.example.digitalcalculator.R.string.arccos)
-                binding.btnTan.text = resources.getText(com.example.digitalcalculator.R.string.arctan)
-                binding.btnDegree.isEnabled = false
+            isSecondEnable = false
+            binding.btnSin.text = resources.getText(com.example.digitalcalculator.R.string.arcsin)
+            binding.btnCos.text = resources.getText(com.example.digitalcalculator.R.string.arccos)
+            binding.btnTan.text = resources.getText(com.example.digitalcalculator.R.string.arctan)
+            binding.btnDegree.isEnabled = false
 
         } else {
             isSecondEnable = true
-            binding.btnSin.text ="sin "
+            binding.btnSin.text = "sin "
             binding.btnCos.text = "cos "
             binding.btnTan.text = "tan "
             binding.btnDegree.isEnabled = true
@@ -510,33 +541,55 @@ class TwoInOneCalculator : Fragment() {
         val expression = currentItem.expression
         val result = currentItem.result
         if (expression.isNotEmpty() && result.isNotEmpty()) {
-            val addingEqualSign = "= $result"
-            val history = HistoryAdapterItem(expression, addingEqualSign)
+
+            val history = HistoryAdapterItem(expression, result)
             // adding to database
             historyViewModel =
                 ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java)
             historyViewModel.insert(history.toEntity())
         }
     }
+
+    private fun textToSpeech(text: String) {
+        val toggleStateOfOutputVoice = sharedPreferences.getBoolean("output_voice_enabled", false)
+
+        if (toggleStateOfOutputVoice )
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
     private fun onSwipeUpToVoiceInput() {
         // Handle swipe up gesture
+        val toggleStateOfInputVoice = sharedPreferences.getBoolean("input_voice_enabled", false)
 
-        mainViewModel=ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        mainViewModel.toggleStateOfInputVoice.observe(viewLifecycleOwner) {
-
+        if (toggleStateOfInputVoice) {
+            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            intent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
+            startActivityForResult(intent, SPEECH_REQUEST_CODE)
         }
 
 
-            if (true) {
-                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-                intent.putExtra(
-                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-                )
-                startActivityForResult(intent, SPEECH_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val results = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            val spokenText = results?.get(0) ?: ""
+            val lastChar = spokenText.last()
+            if (lastChar.isDigit()) {
+
+                binding.tvInputCalculation?.setText(spokenText?.filter {
+                    it.isDigit() || "+-*/".contains(it)
+                })
+                equalAction()
             }
 
 
+        }
     }
 
     @Deprecated("Deprecated in Java")

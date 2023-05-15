@@ -141,7 +141,7 @@
                 android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
                 android:text="@string/cos"
-                android:textSize="@dimen/_14ssp"
+                android:textSize="18sp"
                 android:textColor="?attr/operatorBtnColor"
                 android:gravity="center"
                 android:onClick="onClickMethod"
