@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="3+3"
-        android:padding="20dp"
+
         android:textSize="20dp"
         android:textStyle="bold"
         android:singleLine="true"
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="@string/result"
-        android:padding="20dp"
+
         android:textSize="20dp"
         android:textStyle="bold"
         android:singleLine="true"
@@ -49,6 +49,7 @@
         android:id="@+id/border"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:background="?attr/operatorBtnColor"
        />
 
 </LinearLayout>

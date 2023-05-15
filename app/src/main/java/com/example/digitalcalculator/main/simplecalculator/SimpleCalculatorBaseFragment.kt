@@ -161,14 +161,14 @@ class SimpleCalculatorBaseFragment : Fragment() {
 
     private fun onSwipeUpToVoiceInput() {
         // Handle swipe up gesture
-        if (toggleStateOfInputVoice) {
+       // if (toggleStateOfInputVoice) {
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             intent.putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
             )
             startActivityForResult(intent, SPEECH_REQUEST_CODE)
-        }
+       // }
 
 
     }

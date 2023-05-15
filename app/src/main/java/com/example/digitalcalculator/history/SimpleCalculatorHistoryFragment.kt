@@ -35,6 +35,7 @@ class SimpleCalculatorHistoryFragment : Fragment() {
          val adapter = HistoryAdapter()
          adapter.setHistory(history)
          recyclerView.adapter = adapter
+         (recyclerView.layoutManager as LinearLayoutManager).scrollToPosition(history.size - 1)
         }
 
 

@@ -86,91 +86,90 @@
 
             <TextView
                 android:id="@+id/btnSecond"
-                android:layout_width="55dp"
+                android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
-                android:gravity="center"
                 android:text="@string/_2nd"
-
                 android:textSize="@dimen/_14ssp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/btnPower"
-                app:layout_constraintEnd_toStartOf="@+id/btnDegree"
+                android:textColor="?attr/operatorBtnColor"
+                android:gravity="center"
+                android:onClick="onClickMethod"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="spread_inside" />
+                app:layout_constraintVertical_chainStyle="spread_inside"
 
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnDegree"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/btnPower"
+                android:visibility="gone"
+                />
             <TextView
                 android:id="@+id/btnDegree"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
+                android:text="@string/deg"
+                android:textSize="@dimen/_14ssp"
+                android:textColor="?attr/operatorBtnColor"
                 android:gravity="center"
                 android:onClick="onClickMethod"
-                android:text="@string/deg"
+                app:layout_constraintVertical_chainStyle="spread_inside"
 
-                android:textColor="?attr/operatorBtnColor"
-                android:textSize="@dimen/_14ssp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/btnLog"
-                app:layout_constraintEnd_toStartOf="@+id/btnSin"
                 app:layout_constraintStart_toEndOf="@+id/btnSecond"
+                app:layout_constraintEnd_toStartOf="@+id/btnSin"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="spread_inside" />
-
+                app:layout_constraintBottom_toTopOf="@+id/btnLog"
+                android:visibility="gone"
+                />
             <TextView
                 android:id="@+id/btnSin"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
+                android:text="@string/sin"
+                android:textSize="@dimen/_14ssp"
+                android:textColor="?attr/operatorBtnColor"
                 android:gravity="center"
                 android:onClick="onClickMethod"
-                android:text="@string/sin"
+                app:layout_constraintVertical_chainStyle="spread_inside"
 
-                android:textColor="?attr/operatorBtnColor"
-                android:textSize="@dimen/_14ssp"
-                android:visibility="gone"
-
-                app:layout_constraintBottom_toTopOf="@+id/btnNaturalLog"
-                app:layout_constraintEnd_toStartOf="@+id/btnCos"
                 app:layout_constraintStart_toEndOf="@+id/btnDegree"
+                app:layout_constraintEnd_toStartOf="@+id/btnCos"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="spread_inside" />
-
+                app:layout_constraintBottom_toTopOf="@+id/btnNaturalLog"
+                android:visibility="gone"
+                />
             <TextView
                 android:id="@+id/btnCos"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
+                android:text="@string/cos"
+                android:textSize="@dimen/_14ssp"
+                android:textColor="?attr/operatorBtnColor"
                 android:gravity="center"
                 android:onClick="onClickMethod"
-                android:text="@string/cos"
+                app:layout_constraintVertical_chainStyle="spread_inside"
 
-                android:textColor="?attr/operatorBtnColor"
-                android:textSize="@dimen/_14ssp"
-                android:visibility="gone"
-
-                app:layout_constraintBottom_toTopOf="@+id/btnParenthesisStart"
-                app:layout_constraintEnd_toStartOf="@+id/btnTan"
                 app:layout_constraintStart_toEndOf="@+id/btnSin"
+                app:layout_constraintEnd_toStartOf="@+id/btnTan"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="spread_inside" />
-
+                app:layout_constraintBottom_toTopOf="@+id/btnParenthesisStart"
+                android:visibility="gone"
+                />
             <TextView
                 android:id="@+id/btnTan"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
+                android:text="@string/tan"
+                android:textSize="@dimen/_14ssp"
+                android:textColor="?attr/operatorBtnColor"
                 android:gravity="center"
                 android:onClick="onClickMethod"
-                android:text="@string/tan"
+                app:layout_constraintVertical_chainStyle="spread_inside"
 
-                android:textColor="?attr/operatorBtnColor"
-                android:textSize="@dimen/_14ssp"
-                android:visibility="gone"
-
-                app:layout_constraintBottom_toTopOf="@+id/btnParenthesisClose"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btnCos"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="spread_inside" />
-
+                app:layout_constraintBottom_toTopOf="@+id/btnParenthesisClose"
+                android:visibility="gone"
+                />
 
             <TextView
                 android:id="@+id/btnPower"

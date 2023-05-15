@@ -7,12 +7,14 @@ import android.os.Vibrator
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import com.example.digitalcalculator.main.scientficcalculator.ScientificFragment.Companion.addedSC
+import com.example.digitalcalculator.main.TwoInOneCalculator.Companion.addedSC
+
 
 object ButtonUtil {
-    fun addNumberValueToText(context: Context, buttonId: Button, textViewId: TextView, id: Int?) {
+    fun addNumberValueToText(context: Context, buttonId: Button, textViewId: TextView,backClearBtn:Button ,id: Int?) {
         buttonId.setOnClickListener {
             vibratePhone(context)
+            backClearBtn.isEnabled=true
             textViewId.text = "${textViewId.text}${buttonId.text}"
             when (id) {
                 1 -> addedSC = false
@@ -20,9 +22,10 @@ object ButtonUtil {
         }
     }
 
-    fun addScientificValueToText(context: Context, textId: TextView, textViewId: TextView, id: Int?) {
+    fun addScientificValueToText(context: Context, textId: TextView, textViewId: TextView,backClearBtn:Button , id: Int?) {
         textId.setOnClickListener {
             vibratePhone(context)
+            backClearBtn.isEnabled=true
             textViewId.text = "${textViewId.text}${textId.text}"
             when (id) {
                 1 -> addedSC = false
@@ -30,10 +33,10 @@ object ButtonUtil {
         }
     }
 
-    fun addOperatorValueToText(context: Context, buttonId: Button, textViewId: TextView, text: String, id: Int) {
+    fun addOperatorValueToText(context: Context, buttonId: Button, textViewId: TextView,backClearBtn:Button , text: String, id: Int) {
         buttonId.setOnClickListener {
             vibratePhone(context)
-
+            backClearBtn.isEnabled=true
             when (id) {
                 1 -> {
                     if (addedSC) textViewId.text = textViewId.text.subSequence(0, textViewId.length() - 1)
