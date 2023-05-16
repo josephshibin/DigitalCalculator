@@ -3,27 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/baseFragment">
+    app:startDestination="@id/twoInOneCalculator">
 
-    <fragment
-        android:id="@+id/simpleCalculatorFragment"
-        android:name="com.example.digitalcalculator.main.simplecalculator.SimpleCalculatorBaseFragment"
-        android:label="Simple Calculator"
-        tools:layout="@layout/fragment_simple_calculator">
-        <action
-            android:id="@+id/action_simpleCalculatorFragment_to_baseFragment"
-            app:destination="@id/baseFragment" />
-        <action
-            android:id="@+id/action_simpleCalculatorFragment_to_historyFragment"
-            app:destination="@id/historyFragment" />
-    </fragment>
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.example.mobilecalculator.history.SimpleCalculatorHistoryFragment"
         android:label="History">
-        <action
-            android:id="@+id/action_historyFragment_to_simpleCalculatorFragment"
-            app:destination="@id/simpleCalculatorFragment" />
         <action
             android:id="@+id/action_historyFragment_to_twoInOneCalculator"
             app:destination="@id/twoInOneCalculator" />
@@ -33,44 +18,18 @@
         android:name="com.example.digitalcalculator.settings.Settings"
         android:label="Settings" >
         <action
-            android:id="@+id/action_settings_to_baseFragment"
-            app:destination="@id/baseFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/baseFragment"
-        android:name="com.example.digitalcalculator.main.BaseFragment"
-        android:label="DigitalCalculator"
-        tools:layout="@layout/fragment_base">
-        <action
-            android:id="@+id/action_baseFragment_to_simpleCalculatorFragment"
-            app:destination="@id/simpleCalculatorFragment" />
-        <action
-            android:id="@+id/action_baseFragment_to_settings"
-            app:destination="@id/settings" />
-        <action
-            android:id="@+id/action_baseFragment_to_scientificFragment"
-            app:destination="@id/scientificFragment" />
-        <action
-            android:id="@+id/action_baseFragment_to_twoInOneCalculator"
+            android:id="@+id/action_settings_to_twoInOneCalculator"
             app:destination="@id/twoInOneCalculator" />
-    </fragment>
-    <fragment
-        android:id="@+id/scientificFragment"
-        android:name="com.example.digitalcalculator.main.scientficcalculator.ScientificFragment"
-        android:label="ScientificFragment" >
-        <action
-            android:id="@+id/action_scientificFragment_to_baseFragment"
-            app:destination="@id/baseFragment" />
     </fragment>
     <fragment
         android:id="@+id/twoInOneCalculator"
         android:name="com.example.digitalcalculator.main.TwoInOneCalculator"
         android:label="TwoInOneCalculator" >
         <action
-            android:id="@+id/action_twoInOneCalculator_to_baseFragment"
-            app:destination="@id/baseFragment" />
-        <action
             android:id="@+id/action_twoInOneCalculator_to_historyFragment"
             app:destination="@id/historyFragment" />
+        <action
+            android:id="@+id/action_twoInOneCalculator_to_settings"
+            app:destination="@id/settings" />
     </fragment>
 </navigation>

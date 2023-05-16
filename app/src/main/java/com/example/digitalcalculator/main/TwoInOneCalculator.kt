@@ -660,7 +660,7 @@ class TwoInOneCalculator : Fragment() {
     @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(com.example.digitalcalculator.R.menu.history, menu)
+        inflater.inflate(com.example.digitalcalculator.R.menu.mainmenu, menu)
     }
 
     @Deprecated("Deprecated in Java")
@@ -670,6 +670,10 @@ class TwoInOneCalculator : Fragment() {
             com.example.digitalcalculator.R.id.historyFragment -> {
                 view?.findNavController()
                     ?.navigate(com.example.digitalcalculator.R.id.action_twoInOneCalculator_to_historyFragment)
+            }
+            com.example.digitalcalculator.R.id.settings -> {
+                view?.findNavController()
+                    ?.navigate(com.example.digitalcalculator.R.id.action_twoInOneCalculator_to_settings)
             }
         }
 
