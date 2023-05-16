@@ -42,7 +42,7 @@
     <string name="equal">=</string>
     <string name="pi">\u03c0</string>
     <string name="e">e</string>
-    <string name="log">lg</string>
+    <string name="log">log</string>
     <string name="ln">ln</string>
     <string name="sqrt">\u221a</string>
     <string name="x_mode">|x|</string>

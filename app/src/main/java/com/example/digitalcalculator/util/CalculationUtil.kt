@@ -1,8 +1,22 @@
 package com.example.digitalcalculator.util
 
+import com.example.digitalcalculator.main.TwoInOneCalculator.Companion.addedOperator
 import kotlin.math.*
 
 object CalculationUtil {
+    fun evaluateResult(input: String):String{
+        val inputString:String
+        val lastChar = input.last()
+        if( "-/+*.".contains(lastChar)){
+             inputString=input.dropLast(1)
+            addedOperator=false
+
+        }else
+        {
+            inputString=input
+        }
+     return inputString
+    }
     fun evaluate(input: String): Float {
         return object : Any() {
             var position = -1
