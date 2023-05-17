@@ -2,13 +2,21 @@ package com.example.digitalcalculator.main
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityManager
+import android.app.AlertDialog
+import android.app.PictureInPictureParams
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
+import android.os.Build
 import android.os.Build.VERSION_CODES.R
 import android.os.Bundle
+import android.provider.Settings
 import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
+import android.util.Rational
 import android.view.GestureDetector
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,8 +26,11 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.example.digitalcalculator.FloatingWindowApp
 import com.example.digitalcalculator.R
 import com.example.digitalcalculator.databinding.FragmentTwoInOneBinding
 import com.example.digitalcalculator.domain.HistoryAdapterItem
@@ -37,6 +48,8 @@ import kotlin.properties.Delegates
 
 
 class TwoInOneCalculator : Fragment() {
+    private lateinit var dialog: AlertDialog
+
     private lateinit var historyViewModel: HistoryViewModel
     private lateinit var mainViewModel: MainViewModel
     private lateinit var binding: FragmentTwoInOneBinding
@@ -81,6 +94,9 @@ class TwoInOneCalculator : Fragment() {
 
         setScreen(0.40)
         setHasOptionsMenu(true)
+        if (isServiceRunning()){
+            requireContext().stopService(Intent(requireContext(),FloatingWindowApp::class.java))
+        }
         return binding.root
     }
 
@@ -675,9 +691,67 @@ class TwoInOneCalculator : Fragment() {
                 view?.findNavController()
                     ?.navigate(com.example.digitalcalculator.R.id.action_twoInOneCalculator_to_settings)
             }
+            com.example.digitalcalculator.R.id.minimize -> {
+                enterPipMode()
+            }
+            com.example.digitalcalculator.R.id.float_screen -> {
+               if (checkOverlayPermission()){
+                   requireContext().startService(Intent(requireContext(),FloatingWindowApp::class.java))
+                   requireActivity().finish()
+               }else{
+                   requestFloatingWindowpermission()
+               }
+            }
         }
 
         return true
+    }
+
+    private fun enterPipMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val aspectRatio = Rational(85, 50) // Setting the desired aspect ratio
+            val params = PictureInPictureParams.Builder()
+                .setAspectRatio(aspectRatio)
+                .build()
+
+            requireActivity().enterPictureInPictureMode(params)
+        }
+    }
+
+    private fun isServiceRunning(): Boolean {
+        val manager =requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (FloatingWindowApp::class.java.name == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun requestFloatingWindowpermission() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setCancelable(true)
+        builder.setTitle("Screen Overlay Permission Needed")
+        builder.setMessage("Enable 'Display Over The App' from settings")
+        builder.setPositiveButton(
+            "Open Settings",
+            DialogInterface.OnClickListener { dialog, which ->
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${requireContext().packageName}")
+                )
+                startActivityForResult(intent, AppCompatActivity.RESULT_OK)
+
+            })
+        dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun checkOverlayPermission():Boolean{
+        return if(Build.VERSION.SDK_INT>Build.VERSION_CODES.M){
+            Settings.canDrawOverlays(requireContext())
+        }else
+            return true
     }
 
 }
