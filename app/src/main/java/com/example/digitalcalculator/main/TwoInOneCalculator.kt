@@ -474,11 +474,7 @@ class TwoInOneCalculator : Fragment() {
                     textToSpeech(binding.tvEqualCalculation.text.toString())
                 }
 
-//                if(binding.tvEqualCalculation.text.isNotEmpty()){
-//                    val resultOfPreviousCal = binding.tvEqualCalculation.text.toString()
-//                    val result = resultOfPreviousCal.replace(Regex("[^\\d.]"), "")
-//                    binding.tvInputCalculation.text=result
-//                }
+
             } catch (e: Exception) {
                 ButtonUtil.invalidInputToast(requireContext())
                 textToSpeech("Invalid Input")
@@ -696,7 +692,8 @@ class TwoInOneCalculator : Fragment() {
             }
             com.example.digitalcalculator.R.id.float_screen -> {
                if (checkOverlayPermission()){
-                   requireContext().startService(Intent(requireContext(),FloatingWindowApp::class.java))
+                  //  requireContext().startService(Intent(requireContext(),FloatingWindowApp::class.java))
+                   view?.findNavController()?.navigate(com.example.digitalcalculator.R.id.action_twoInOneCalculator_to_floatingWindowFragment)
                    requireActivity().finish()
                }else{
                    requestFloatingWindowpermission()

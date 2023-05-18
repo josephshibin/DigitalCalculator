@@ -31,5 +31,16 @@
         <action
             android:id="@+id/action_twoInOneCalculator_to_settings"
             app:destination="@id/settings" />
+        <action
+            android:id="@+id/action_twoInOneCalculator_to_floatingWindowFragment"
+            app:destination="@id/floatingWindowFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/floatingWindowFragment"
+        android:name="com.example.digitalcalculator.FloatingWindowFragment"
+        android:label="FloatingWindowFragment" >
+        <action
+            android:id="@+id/action_floatingWindowFragment_to_twoInOneCalculator"
+            app:destination="@id/twoInOneCalculator" />
     </fragment>
 </navigation>

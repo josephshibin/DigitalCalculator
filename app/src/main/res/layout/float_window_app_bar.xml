@@ -1,0 +1,8 @@
+<!-- app_bar_layout.xml -->
+<android.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/appBar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/primaryGrey"
+    android:elevation="4dp"
+     />

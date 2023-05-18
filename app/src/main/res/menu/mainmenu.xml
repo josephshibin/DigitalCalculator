@@ -12,7 +12,7 @@
         android:id="@+id/minimize"
         android:title="TODO" />
     <item
-        android:icon="@drawable/baseline_photo_size_select_small_24"
+        android:icon="@drawable/baseline_close_fullscreen_24"
         app:showAsAction="always"
         android:id="@+id/float_screen"
         android:title="TODO" />
