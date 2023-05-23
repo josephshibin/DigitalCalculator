@@ -15,6 +15,9 @@ class HistoryRepository (private val historyDao: HistoryDao) {
     suspend fun insertHistoryToDatabase(history: HistoryEntity) {
         historyDao.insertHistory(history)
     }
+    suspend fun deleteAllHistory(){
+        historyDao.clearHistory()
+    }
 
 
 

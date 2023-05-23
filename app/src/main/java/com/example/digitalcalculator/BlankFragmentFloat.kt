@@ -1,7 +1,6 @@
 package com.example.digitalcalculator
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.PixelFormat
 import android.os.Build
@@ -9,16 +8,25 @@ import android.os.Bundle
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.appcompat.widget.Toolbar
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.lifecycle.ViewModelProvider
+import com.example.digitalcalculator.databinding.FloatWindowBinding
+import com.example.digitalcalculator.domain.HistoryAdapterItem
+import com.example.digitalcalculator.domain.toEntity
+import com.example.digitalcalculator.history.historyviewmodel.HistoryViewModel
 import com.example.digitalcalculator.main.TwoInOneCalculator
+import com.example.digitalcalculator.util.ButtonUtil
+import com.example.digitalcalculator.util.CalculationUtil
 
 class FloatingWindowFragment : Fragment() {
+    private lateinit var historyViewModel: HistoryViewModel
     private lateinit var floatView: ViewGroup
     private lateinit var floatWindowLayoutParams: WindowManager.LayoutParams
     private var layoutType: Int = 0 // Set default value
     private lateinit var windowManager: WindowManager
+    private lateinit var binding: FloatWindowBinding
+    private lateinit var fragmentContext: Context
 
     private var touchX: Float = 0F
     private var touchY: Float = 0F
@@ -26,9 +34,20 @@ class FloatingWindowFragment : Fragment() {
     private var windowY: Int = 0
 
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        fragmentContext = context // Store the context reference
+        windowManager = requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Create a placeholder layout as the root view
+        binding = FloatWindowBinding.inflate(layoutInflater, container, false)
+        floatView = binding.root
         val rootView = FrameLayout(requireContext())
 
         // Get display metrics to set initial size of floating window
@@ -37,11 +56,11 @@ class FloatingWindowFragment : Fragment() {
         val height = metrics.heightPixels
 
         // Get WindowManager and LayoutInflater instances
-        windowManager = requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        //  windowManager = requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        // val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         // Inflate the floating window layout
-        floatView = inflater.inflate(R.layout.float_window, container, false) as ViewGroup
+        //  floatView = inflater.inflate(R.layout.float_window, container, false) as ViewGroup
 
         // Get reference to the app bar
         val appBar = floatView.findViewById<androidx.appcompat.widget.Toolbar>(R.id.appBar)
@@ -95,6 +114,7 @@ class FloatingWindowFragment : Fragment() {
                     floatView.setBackgroundColor(transparentBlue)
 
                 }
+
                 MotionEvent.ACTION_MOVE -> {
                     // Calculate the new window size based on touch delta
                     val deltaX = event.rawX - touchX
@@ -124,6 +144,7 @@ class FloatingWindowFragment : Fragment() {
                     touchX = event.rawX
                     touchY = event.rawY
                 }
+
                 MotionEvent.ACTION_UP -> {
                     // Unhighlight the floating window when released
                     floatView.setBackgroundColor(Color.WHITE)
@@ -135,6 +156,7 @@ class FloatingWindowFragment : Fragment() {
         // Handle right icon click event
         rightIcon.setOnClickListener {
             // Handle right icon click event here
+            requireActivity().finish()
 
         }
 
@@ -179,6 +201,7 @@ class FloatingWindowFragment : Fragment() {
                     windowX = floatWindowLayoutParams.x
                     windowY = floatWindowLayoutParams.y
                 }
+
                 MotionEvent.ACTION_MOVE -> {
                     // Calculate the new window position based on touch delta
                     val deltaX = event.rawX - touchX
@@ -194,5 +217,226 @@ class FloatingWindowFragment : Fragment() {
         }
 
         return rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        ButtonUtil.addNumberValueToText(
+            requireContext(),
+            binding.btn0,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            1,
+            "FloatWindow"
+        )
+        ButtonUtil.addNumberValueToText(
+            requireContext(),
+            binding.btn1,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            1,
+            "FloatWindow"
+        )
+        ButtonUtil.addNumberValueToText(
+            requireContext(),
+            binding.btn2,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            1,
+            "FloatWindow"
+        )
+        ButtonUtil.addNumberValueToText(
+            requireContext(),
+            binding.btn3,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            1,
+            "FloatWindow"
+        )
+        ButtonUtil.addNumberValueToText(
+            requireContext(),
+            binding.btn4,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            1,
+            "FloatWindow"
+        )
+        ButtonUtil.addNumberValueToText(
+            requireContext(),
+            binding.btn5,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            1,
+            "FloatWindow"
+        )
+        ButtonUtil.addNumberValueToText(
+            requireContext(),
+            binding.btn6,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            1,
+            "FloatWindow"
+        )
+        ButtonUtil.addNumberValueToText(
+            requireContext(),
+            binding.btn7,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            1,
+            "FloatWindow"
+        )
+        ButtonUtil.addNumberValueToText(
+            requireContext(),
+            binding.btn8,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            1,
+            "FloatWindow"
+        )
+        ButtonUtil.addNumberValueToText(
+            requireContext(),
+            binding.btn9,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            1,
+            "FloatWindow"
+        )
+        ButtonUtil.addOperatorValueToText(
+            requireContext(),
+            binding.addBtn,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            "+",
+            1,
+            "FloatWindow"
+        )
+        ButtonUtil.addOperatorValueToText(
+            requireContext(),
+            binding.subBtn,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            "-",
+            1,
+            "FloatWindow"
+        )
+        ButtonUtil.addOperatorValueToText(
+            requireContext(),
+            binding.mulBtn,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            "*",
+            1,
+            "FloatWindow"
+        )
+        ButtonUtil.addOperatorValueToText(
+            requireContext(),
+            binding.divBtn,
+            binding.workingsTV,
+            binding.backBtn,
+            binding.resultsTV,
+            "/",
+            1,
+            "FloatWindow"
+        )
+
+
+        binding.clearBtn.setOnClickListener {
+            // ButtonUtil.vibratePhone(requireContext())
+
+            binding.workingsTV.text = ""
+            binding.resultsTV.text = ""
+            TwoInOneCalculator.addedOperator = false
+            TwoInOneCalculator.equalAction = false
+        }
+
+        binding.backBtn.setOnClickListener {
+           // Toast.makeText(fragmentContext, "check", Toast.LENGTH_SHORT).show()
+            ButtonUtil.vibratePhone(fragmentContext)
+
+            if (binding.workingsTV.text.contains("+") ||
+                binding.workingsTV.text.contains("-") ||
+                binding.workingsTV.text.contains("*") ||
+                binding.workingsTV.text.contains("/")
+            ) TwoInOneCalculator.addedOperator = false
+            if (binding.workingsTV.length() == 1) {
+                binding.workingsTV.text = "0"
+                ButtonUtil.instantEqual(binding.workingsTV, binding.resultsTV)
+
+            } else {
+                binding.workingsTV.text =
+                    binding.workingsTV.text.subSequence(0, binding.workingsTV.length() - 1)
+                ButtonUtil.instantEqual(binding.workingsTV, binding.resultsTV)
+            }
+        }
+
+        binding.equalBtn.setOnClickListener {
+            equalAction()
+        }
+
+    }
+
+    private fun equalAction() {
+        // Toast.makeText(fragmentContext, "check", Toast.LENGTH_SHORT).show()
+        ButtonUtil.vibratePhone(fragmentContext)
+        binding.backBtn.isEnabled = false
+        try {
+            if (binding.workingsTV.text.isNotEmpty()) {
+                TwoInOneCalculator.equalAction = true
+                TwoInOneCalculator.addedPointToOperand = false
+                binding.workingsTV.textSize = 12f
+                binding.resultsTV.textSize = 22f
+
+                val input = binding.workingsTV.text.toString()
+                val checkedExp = CalculationUtil.evaluateResult(input)
+                val result = CalculationUtil.evaluate(checkedExp).toString()
+                val finalResult = CalculationUtil.trimResult(result)
+                binding.workingsTV.text = input
+                binding.resultsTV.text = "= $finalResult"
+                // TwoInOneCalculator.addedOperator = false
+                val answer = binding.resultsTV.text.toString()
+                val expression = binding.workingsTV.text.toString()
+                val currentItem = HistoryAdapterItem(expression, answer)
+
+
+                addToTheHistory(currentItem)
+                // below line make the back clear button disable after getting the result
+                //  it will be enabled wen other button is clicked
+                binding.backBtn.isEnabled = true
+
+
+            }
+        } catch (e: Exception) {
+            ButtonUtil.invalidInputToast(fragmentContext)
+        }
+
+
+    }
+
+    private fun addToTheHistory(currentItem: HistoryAdapterItem) {
+        val expression = currentItem.expression
+        val result = currentItem.result
+        if (expression.isNotEmpty() && result.isNotEmpty()) {
+            Toast.makeText(fragmentContext, "check", Toast.LENGTH_SHORT).show()
+
+            val history = HistoryAdapterItem(expression, result)
+            // adding to database
+            historyViewModel =
+                ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java)
+            historyViewModel.insert(history.toEntity())
+        }
     }
 }

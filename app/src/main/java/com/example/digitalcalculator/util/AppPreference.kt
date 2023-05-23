@@ -33,12 +33,21 @@ class AppPreference(context: Context) {
         return sharedPreferences.getBoolean(key, def)!!
     }
 
+    fun setIsHistoryAvailable(key: String, value: Boolean) {
+        sharedPreferences.edit().putBoolean(key, value).apply()
+    }
+
+    fun getIsHistoryAvailable(key: String, def: Boolean = false): Boolean {
+        return sharedPreferences.getBoolean(key, def)!!
+    }
+
 
 
     companion object {
         private const val SHARED_PREF = BuildConfig.APPLICATION_ID
 
         const val APP_THEME = "app_theme"
+        const val HISTORY_AVAILABLE="history_available"
         const val INPUT_VOICE="input_voice_toggle"
         const val OUTPUT_VOICE="output_voice_toggle"
         const val ACCENT_THEME = "app_accent_theme"

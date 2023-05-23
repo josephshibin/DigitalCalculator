@@ -7,6 +7,7 @@ import android.os.Vibrator
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.digitalcalculator.main.TwoInOneCalculator
 import com.example.digitalcalculator.main.TwoInOneCalculator.Companion.addedNumber
 import com.example.digitalcalculator.main.TwoInOneCalculator.Companion.addedOperator
@@ -23,38 +24,73 @@ object ButtonUtil {
         textViewId: TextView,
         backClearBtn: Button,
         tvEqualCalculation: TextView,
-        id: Int?
+        id: Int?,
+        from:String="Main"
     ) {
         buttonId.setOnClickListener {
             vibratePhone(context)
-            textViewId.textSize = 42f
-            tvEqualCalculation.textSize = 25f
-            if (!equalAction) {
-                backClearBtn.isEnabled = true
-                textViewId.text = "${textViewId.text}${buttonId.text}"
-                addedNumber=true
-
-                when (id) {
-                    1 -> {
-                        addedTrigno = false
-                        addedOperator = false
-                    }
-                }
-                instantEqual(textViewId, tvEqualCalculation)
-            } else {
-                  equalAction = false
-                if (!addedOperator && !addedTrigno) {
-                    tvEqualCalculation.text = ""
-                    textViewId.text = ""
+            if (from == "Main") {
+                textViewId.textSize = 42f
+                tvEqualCalculation.textSize = 25f
+                if (!equalAction) {
+                    backClearBtn.isEnabled = true
                     textViewId.text = "${textViewId.text}${buttonId.text}"
-                    addedNumber=true
+                    addedNumber = true
+
+                    when (id) {
+                        1 -> {
+                            addedTrigno = false
+                            addedOperator = false
+                        }
+                    }
                     instantEqual(textViewId, tvEqualCalculation)
                 } else {
+                    equalAction = false
+                    if (!addedOperator && !addedTrigno) {
+                        tvEqualCalculation.text = ""
+                        textViewId.text = ""
+                        textViewId.text = "${textViewId.text}${buttonId.text}"
+                        addedNumber = true
+                        instantEqual(textViewId, tvEqualCalculation)
+                    } else {
+                        textViewId.text = "${textViewId.text}${buttonId.text}"
+                        addedNumber = true
+                        addedOperator = false
+                        addedTrigno = false
+                        instantEqual(textViewId, tvEqualCalculation)
+                    }
+                }
+            }else{
+                // Floating window
+                textViewId.textSize = 22f
+                tvEqualCalculation.textSize = 12f
+                if (!equalAction) {
+                    backClearBtn.isEnabled = true
                     textViewId.text = "${textViewId.text}${buttonId.text}"
-                    addedNumber=true
-                    addedOperator=false
-                    addedTrigno=false
+                    addedNumber = true
+
+                    when (id) {
+                        1 -> {
+                            addedTrigno = false
+                            addedOperator = false
+                        }
+                    }
                     instantEqual(textViewId, tvEqualCalculation)
+                } else {
+                    equalAction = false
+                    if (!addedOperator && !addedTrigno) {
+                        tvEqualCalculation.text = ""
+                        textViewId.text = ""
+                        textViewId.text = "${textViewId.text}${buttonId.text}"
+                        addedNumber = true
+                        instantEqual(textViewId, tvEqualCalculation)
+                    } else {
+                        textViewId.text = "${textViewId.text}${buttonId.text}"
+                        addedNumber = true
+                        addedOperator = false
+                        addedTrigno = false
+                        instantEqual(textViewId, tvEqualCalculation)
+                    }
                 }
             }
         }
@@ -101,34 +137,64 @@ object ButtonUtil {
         backClearBtn: Button,
         tvEqualCalculation: TextView,
         text: String,
-        id: Int
+        id: Int,
+        from:String="Main"
     ) {
         buttonId.setOnClickListener {
 
             textViewId.textSize = 42f
             tvEqualCalculation.textSize = 25f
             vibratePhone(context)
-            backClearBtn.isEnabled = true
-            if(textViewId.text.isEmpty() && tvEqualCalculation.text.isEmpty()){
-                textViewId.text="0"
+            if (from == "Main") {
+                backClearBtn.isEnabled = true
+                if (textViewId.text.isEmpty() && tvEqualCalculation.text.isEmpty()) {
+                    textViewId.text = "0"
 
-            }
-            if (!equalAction) {
-                when (id) {
-                    1 -> {
-                        if (addedOperator) textViewId.text =
-                            textViewId.text.subSequence(0, textViewId.length() - 1)
-                        textViewId.text = textViewId.text.toString() + text
-                        addedOperator = true
-                        TwoInOneCalculator.addedPointToOperand =false
-                    }
                 }
-            } else {
-                val resultOfPreviousCal = tvEqualCalculation.text.toString()
-                val result = resultOfPreviousCal.replace(Regex("[^\\d.]"), "")
-                textViewId.text = result + text
-                addedOperator = true
-                TwoInOneCalculator.addedPointToOperand =false
+                if (!equalAction) {
+                    when (id) {
+                        1 -> {
+                            if (addedOperator) textViewId.text =
+                                textViewId.text.subSequence(0, textViewId.length() - 1)
+                            textViewId.text = textViewId.text.toString() + text
+                            addedOperator = true
+                            TwoInOneCalculator.addedPointToOperand = false
+                        }
+                    }
+                } else {
+                    val resultOfPreviousCal = tvEqualCalculation.text.toString()
+                    val result = resultOfPreviousCal.replace(Regex("[^\\d.]"), "")
+                    textViewId.text = result + text
+                    addedOperator = true
+                    TwoInOneCalculator.addedPointToOperand = false
+                }
+            }else{
+                // Floating window
+                textViewId.textSize = 22f
+                tvEqualCalculation.textSize = 12f
+                backClearBtn.isEnabled = true
+                if (textViewId.text.isEmpty() && tvEqualCalculation.text.isEmpty()) {
+                    textViewId.text = "0"
+
+                }
+                if (!equalAction) {
+                    when (id) {
+                        1 -> {
+                            if (addedOperator) textViewId.text =
+                                textViewId.text.subSequence(0, textViewId.length() - 1)
+                            textViewId.text = textViewId.text.toString() + text
+                            addedOperator = true
+                            TwoInOneCalculator.addedPointToOperand = false
+                        }
+                    }
+                } else {
+                    val resultOfPreviousCal = tvEqualCalculation.text.toString()
+                    val result = resultOfPreviousCal.replace(Regex("[^\\d.]"), "")
+                    textViewId.text = result + text
+                    addedOperator = true
+                    TwoInOneCalculator.addedPointToOperand = false
+                }
+
             }
         }
     }
@@ -153,4 +219,6 @@ object ButtonUtil {
     fun invalidInputToast(context: Context) {
         Toast.makeText(context, "Invalid Input", Toast.LENGTH_SHORT).show()
     }
+
+
 }

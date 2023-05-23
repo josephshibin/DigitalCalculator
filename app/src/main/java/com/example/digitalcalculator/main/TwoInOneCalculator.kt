@@ -11,7 +11,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
-import android.os.Build.VERSION_CODES.R
 import android.os.Bundle
 import android.provider.Settings
 import android.speech.RecognizerIntent
@@ -27,7 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.digitalcalculator.FloatingWindowApp
@@ -39,6 +38,9 @@ import com.example.digitalcalculator.gestures.SwipeGestureListener
 import com.example.digitalcalculator.history.historyviewmodel.HistoryViewModel
 import com.example.digitalcalculator.main.ScreenUtils.getScreenHeight
 import com.example.digitalcalculator.settings.viewmodel.MainViewModel
+import com.example.digitalcalculator.sharedviewmodel.HistorySharedViewModel
+import com.example.digitalcalculator.util.AppPreference
+import com.example.digitalcalculator.util.AppPreference.Companion.HISTORY_AVAILABLE
 
 import com.example.digitalcalculator.util.ButtonUtil
 import com.example.digitalcalculator.util.CalculationUtil
@@ -52,11 +54,15 @@ class TwoInOneCalculator : Fragment() {
 
     private lateinit var historyViewModel: HistoryViewModel
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var appPreference: AppPreference
     private lateinit var binding: FragmentTwoInOneBinding
     private lateinit var sharedPreferences: SharedPreferences
     private var isScientificCalculator = false
     private var isSecondEnable = true
     private var isDegreeEnable = true
+
+    // initializing shared view model
+    private val sharedViewModel: HistorySharedViewModel by activityViewModels()
     //private var toggleStateOfInputVoice =false
 
     // swipe gesture
@@ -97,6 +103,19 @@ class TwoInOneCalculator : Fragment() {
         if (isServiceRunning()){
             requireContext().stopService(Intent(requireContext(),FloatingWindowApp::class.java))
         }
+
+        // getting back the calculation from history
+        sharedViewModel.currentHistoryDetails.observe(viewLifecycleOwner){
+            binding.tvInputCalculation.textSize = 42f
+            binding.tvInputCalculation.text=it.expression
+            if(it.expression.last().isDigit()){
+                addedNumber=true
+            }else
+            {
+                addedOperator=true
+            }
+        }
+
         return binding.root
     }
 
@@ -624,6 +643,8 @@ class TwoInOneCalculator : Fragment() {
             historyViewModel =
                 ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java)
             historyViewModel.insert(history.toEntity())
+
+
         }
     }
 
